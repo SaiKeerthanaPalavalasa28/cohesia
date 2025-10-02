@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cohesia - Company Registration</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Light mode colors - matching your homepage */
+            --bg-primary: #f5e6ff;
+            --bg-secondary: #ffffff;
+            --text-primary: #4a3c5a;
+            --text-secondary: #6b5b7b;
+            --accent-primary: #e91e63;
+            --accent-secondary: #f8bbd9;
+            --border-color: #e1d4f0;
+            --shadow: rgba(74, 60, 90, 0.1);
+            --success-bg: #4caf50;
+            --error-color: #f44336;
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #1a1625;
+            --bg-secondary: #2d2438;
+            --text-primary: #e8d8f5;
+            --text-secondary: #c4a9d9;
+            --accent-primary: #ff4081;
+            --accent-secondary: #4a3c5a;
+            --border-color: #3d3250;
+            --shadow: rgba(0, 0, 0, 0.3);
+            --success-bg: #66bb6a;
+            --error-color: #ef5350;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg-primary);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+        }
+
+        .container {
+            background: var(--bg-secondary);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px var(--shadow);
+            padding: 40px;
+            width: 100%;
+            max-width: 500px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #ff9ec7, #ffa8d8, #ffb6e1);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            flex: 1;
+        }
+
+        .logo h1 {
+            color: var(--text-primary);
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo h1::after {
+            content: '🌸';
+            font-size: 2rem;
+        }
+
+        .logo p {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        .theme-toggle {
+            background: var(--accent-secondary);
+            border: none;
+            border-radius: 50px;
+            width: 60px;
+            height: 30px;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle::after {
+            content: '🌙';
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 24px;
+            height: 24px;
+            background: var(--bg-secondary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px var(--shadow);
+        }
+
+        [data-theme="dark"] .theme-toggle::after {
+            content: '☀️';
+            transform: translateX(30px);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        input[type="password"],
+        textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+        }
+
+        input:focus,
+        textarea:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px rgba(233, 30, 99, 0.1);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .error-message {
+            color: var(--error-color);
+            font-size: 0.85rem;
+            margin-top: 5px;
+            display: none;
+            animation: slideIn 0.3s ease;
+        }
+
+        .success-message {
+            background: var(--success-bg);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 20px;
+            display: none;
+            animation: slideIn 0.5s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .submit-btn {
+            width: 100%;
+            background: linear-gradient(135deg, var(--accent-primary), #f06292);
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(233, 30, 99, 0.3);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .submit-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 20px;
+            color: var(--text-secondary);
+        }
+
+        .login-link a {
+            color: var(--accent-primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+
+        .input-valid {
+            border-color: var(--success-bg) !important;
+            background: rgba(76, 175, 80, 0.05) !important;
+        }
+
+        .input-invalid {
+            border-color: var(--error-color) !important;
+            background: rgba(244, 67, 54, 0.05) !important;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 30px 20px;
+                margin: 10px;
+            }
+
+            .logo h1 {
+                font-size: 2rem;
+            }
+
+            .header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">
+                <h1>Cohesia</h1>
+                <p>Empowering Women in the Workplace</p>
+            </div>
+            <button class="theme-toggle" id="themeToggle" title="Toggle theme"></button>
+        </div>
+
+        <div class="success-message" id="successMessage">
+            🎉 Company registration successful! Welcome to the Cohesia community!
+        </div>
+
+        <form id="registrationForm">
+            <div class="form-group">
+                <label for="companyName">Company Name *</label>
+                <input type="text" id="companyName" name="companyName" required>
+                <div class="error-message" id="companyNameError"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="companyEmail">Company Email *</label>
+                <input type="email" id="companyEmail" name="companyEmail" required>
+                <div class="error-message" id="companyEmailError"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="companyPhone">Company Phone Number *</label>
+                <input type="tel" id="companyPhone" name="companyPhone" placeholder="1234567890" required>
+                <div class="error-message" id="companyPhoneError"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="companyAddress">Company Address *</label>
+                <textarea id="companyAddress" name="companyAddress" placeholder="Enter your company's full address" required></textarea>
+                <div class="error-message" id="companyAddressError"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password *</label>
+                <input type="password" id="password" name="password" required>
+                <div class="error-message" id="passwordError"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="confirmPassword">Confirm Password *</label>
+                <input type="password" id="confirmPassword" name="confirmPassword" required>
+                <div class="error-message" id="confirmPasswordError"></div>
+            </div>
+
+            <button type="submit" class="submit-btn" id="submitBtn">
+                Register Company
+            </button>
+        </form>
+
+        <div class="login-link">
+            Already have an account? <a href="login.html">Sign In</a>
+        </div>
+    </div>
+
+    <script>
+        // Theme toggle functionality
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
+
+        // Check for saved theme preference or default to light mode
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        body.setAttribute('data-theme', currentTheme);
+
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = body.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            body.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        });
+
+        // Form validation and submission
+        const form = document.getElementById('registrationForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const successMessage = document.getElementById('successMessage');
+
+        // Validation patterns
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const phonePattern = /^\d{10}$/;
+
+        // Real-time validation
+        const inputs = {
+            companyName: document.getElementById('companyName'),
+            companyEmail: document.getElementById('companyEmail'),
+            companyPhone: document.getElementById('companyPhone'),
+            companyAddress: document.getElementById('companyAddress'),
+            password: document.getElementById('password'),
+            confirmPassword: document.getElementById('confirmPassword')
+        };
+
+        // Add real-time validation to all inputs
+        Object.keys(inputs).forEach(key => {
+            inputs[key].addEventListener('input', () => validateField(key));
+            inputs[key].addEventListener('blur', () => validateField(key));
+        });
+
+        function validateField(fieldName) {
+            const field = inputs[fieldName];
+            const errorElement = document.getElementById(fieldName + 'Error');
+            let isValid = true;
+            let errorMessage = '';
+
+            // Remove previous styling
+            field.classList.remove('input-valid', 'input-invalid');
+
+            switch (fieldName) {
+                case 'companyName':
+                    if (field.value.trim().length < 2) {
+                        errorMessage = 'Company name must be at least 2 characters long';
+                        isValid = false;
+                    }
+                    break;
+
+                case 'companyEmail':
+                    if (!emailPattern.test(field.value)) {
+                        errorMessage = 'Please enter a valid email address';
+                        isValid = false;
+                    }
+                    break;
+
+                case 'companyPhone':
+                    if (!phonePattern.test(field.value.replace(/\D/g, ''))) {
+                        errorMessage = 'Phone number must be exactly 10 digits';
+                        isValid = false;
+                    }
+                    break;
+
+                case 'companyAddress':
+                    if (field.value.trim().length < 10) {
+                        errorMessage = 'Please enter a complete address (minimum 10 characters)';
+                        isValid = false;
+                    }
+                    break;
+
+                case 'password':
+                    if (field.value.length < 6) {
+                        errorMessage = 'Password must be at least 6 characters long';
+                        isValid = false;
+                    }
+                    // Re-validate confirm password if it has a value
+                    if (inputs.confirmPassword.value) {
+                        validateField('confirmPassword');
+                    }
+                    break;
+
+                case 'confirmPassword':
+                    if (field.value !== inputs.password.value) {
+                        errorMessage = 'Passwords do not match';
+                        isValid = false;
+                    } else if (field.value.length < 6) {
+                        errorMessage = 'Password must be at least 6 characters long';
+                        isValid = false;
+                    }
+                    break;
+            }
+
+            // Show/hide error message
+            if (isValid && field.value.trim() !== '') {
+                errorElement.style.display = 'none';
+                field.classList.add('input-valid');
+            } else if (!isValid) {
+                errorElement.textContent = errorMessage;
+                errorElement.style.display = 'block';
+                field.classList.add('input-invalid');
+            } else {
+                errorElement.style.display = 'none';
+            }
+
+            return isValid;
+        }
+
+        // Format phone number as user types
+        inputs.companyPhone.addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length > 10) {
+                value = value.slice(0, 10);
+            }
+            e.target.value = value;
+        });
+
+        // Form submission
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            // Validate all fields
+            let allValid = true;
+            Object.keys(inputs).forEach(key => {
+                if (!validateField(key)) {
+                    allValid = false;
+                }
+            });
+
+            // Check if all required fields are filled
+            Object.keys(inputs).forEach(key => {
+                if (inputs[key].value.trim() === '') {
+                    allValid = false;
+                    const errorElement = document.getElementById(key + 'Error');
+                    errorElement.textContent = 'This field is required';
+                    errorElement.style.display = 'block';
+                    inputs[key].classList.add('input-invalid');
+                }
+            });
+
+            if (allValid) {
+                // Simulate successful registration
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Registering...';
+
+                // Collect form data
+                const formData = {
+                    companyName: inputs.companyName.value.trim(),
+                    companyEmail: inputs.companyEmail.value.trim(),
+                    companyPhone: inputs.companyPhone.value.trim(),
+                    companyAddress: inputs.companyAddress.value.trim(),
+                    password: inputs.password.value,
+                    registrationDate: new Date().toISOString()
+                };
+
+                // Make actual API call to register company
+fetch('http://localhost:3000/register', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+    name: formData.companyName,
+    employeeId: 'COMP_' + Date.now(),
+    phoneNumber: formData.companyPhone,
+    password: formData.password,
+    role: 'company'
+})
+})
+.then(response => response.json())
+.then(data => {
+    if (data.success) {
+        console.log('✅ Company successfully registered!');
+        
+        // Redirect to success page with company name
+        window.location.href = `register_success.html?company=${encodeURIComponent(formData.companyName)}`;
+    } else {
+        throw new Error(data.message || 'Registration failed');
+    }
+})
+.catch(error => {
+    console.error('Registration error:', error);
+    alert('Registration failed: ' + error.message);
+    
+    // Reset button
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Register Company';
+});
+            } else {
+                console.log('❌ Form validation failed');
+            }
+        });
+
+        // Add some visual feedback for better UX
+        inputs.companyName.addEventListener('focus', function() {
+            this.placeholder = 'e.g., Tech Innovations Inc.';
+        });
+
+        inputs.companyEmail.addEventListener('focus', function() {
+            this.placeholder = 'e.g., contact@company.com';
+        });
+
+        inputs.companyPhone.addEventListener('focus', function() {
+            this.placeholder = '1234567890';
+        });
+
+        // Clear placeholders on blur
+        Object.keys(inputs).forEach(key => {
+            inputs[key].addEventListener('blur', function() {
+                if (key !== 'companyAddress') {
+                    this.placeholder = '';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

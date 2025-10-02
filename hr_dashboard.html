@@ -1,0 +1,1397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cohesia HR - Employee Safety Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+            background: #111b21;
+            color: #e9edef;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .dashboard-container {
+            display: grid;
+            grid-template-columns: 320px 1fr 380px;
+            height: 100vh;
+            background: #111b21;
+        }
+
+        /* Header */
+        .header {
+            grid-column: 1 / -1;
+            background: linear-gradient(135deg, #f8bbd9 0%, #d4a4eb 100%);
+            padding: 15px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 15px rgba(248, 187, 217, 0.3);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo {
+            width: 45px;
+            height: 45px;
+            background: rgba(45, 27, 61, 0.8);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            backdrop-filter: blur(10px);
+        }
+
+        .header-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #2d1b3d;
+        }
+
+        .header-subtitle {
+            font-size: 14px;
+            color: rgba(45, 27, 61, 0.8);
+            margin-top: 2px;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(45, 27, 61, 0.15);
+            padding: 8px 15px;
+            border-radius: 25px;
+            backdrop-filter: blur(10px);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: #10b981;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.1); }
+        }
+
+        .hr-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(45, 27, 61, 0.15);
+            padding: 8px 15px;
+            border-radius: 25px;
+            backdrop-filter: blur(10px);
+            color: #2d1b3d;
+        }
+
+        .hr-avatar {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #d4a4eb, #f8bbd9);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        /* Left Sidebar - Employee List */
+        .employee-sidebar {
+            background: #202c33;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid #2a3942;
+        }
+
+        .sidebar-header {
+            background: #2d3748;
+            padding: 15px 20px;
+            border-bottom: 1px solid #2a3942;
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            background: #111b21;
+            border-radius: 8px;
+            padding: 8px 12px;
+            margin-bottom: 15px;
+        }
+
+        .search-input {
+            background: none;
+            border: none;
+            color: #e9edef;
+            font-size: 14px;
+            width: 100%;
+            outline: none;
+            margin-left: 8px;
+        }
+
+        .search-input::placeholder {
+            color: #aebac1;
+        }
+
+        .filter-tabs {
+            display: flex;
+            gap: 5px;
+        }
+
+        .filter-tab {
+            background: #111b21;
+            border: none;
+            color: #aebac1;
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .filter-tab.active {
+            background: linear-gradient(135deg, #f8bbd9, #d4a4eb);
+            color: #2d1b3d;
+            font-weight: 500;
+        }
+
+        .employee-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 10px;
+        }
+
+        .employee-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-bottom: 5px;
+            position: relative;
+            border: 1px solid transparent;
+        }
+
+        .employee-item:hover {
+            background: #2a3942;
+        }
+
+        .employee-item.active {
+            background: rgba(248, 187, 217, 0.1);
+            border-color: #f8bbd9;
+        }
+
+        .employee-item.alert {
+            background: rgba(239, 68, 68, 0.1);
+            border-left: 3px solid #ef4444;
+            animation: alertPulse 2s infinite;
+        }
+
+        @keyframes alertPulse {
+            0%, 100% { box-shadow: 0 0 5px rgba(239, 68, 68, 0.3); }
+            50% { box-shadow: 0 0 15px rgba(239, 68, 68, 0.6); }
+        }
+
+        .employee-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #f8bbd9, #d4a4eb);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            font-size: 16px;
+        }
+
+        .employee-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .employee-name {
+            font-weight: 500;
+            font-size: 14px;
+            color: #e9edef;
+            margin-bottom: 2px;
+        }
+
+        .employee-status {
+            font-size: 12px;
+            color: #aebac1;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .status-dot-small {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+        }
+
+        .status-online { background: #10b981; }
+        .status-away { background: #f59e0b; }
+        .status-alert { 
+            background: #ef4444; 
+            animation: pulse 1.5s infinite;
+        }
+
+        .alert-badge {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: bold;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-5px); }
+            60% { transform: translateY(-3px); }
+        }
+
+        /* Main Content - Message Monitor */
+        .main-content {
+            background: #0b141a;
+            background-image: url("data:image/svg+xml,%3csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3e%3cdefs%3e%3cpattern id='a' patternUnits='userSpaceOnUse' width='20' height='20' patternTransform='scale(0.5) rotate(0)'%3e%3crect x='0' y='0' width='100%25' height='100%25' fill='%23111b21'/%3e%3cpath d='M 10,-2.55e-7 V 20 Z M -1.1677362e-8,10 H 20 Z' stroke-width='0.5' stroke='%23182229' fill='none'/%3e%3c/pattern%3e%3c/defs%3e%3crect width='100%25' height='100%25' fill='url(%23a)'/%3e%3c/svg%3e");
+            display: flex;
+            flex-direction: column;
+        }
+
+        .content-header {
+            background: #202c33;
+            padding: 20px 25px;
+            border-bottom: 1px solid #2a3942;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .content-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #e9edef;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .live-indicator {
+            width: 10px;
+            height: 10px;
+            background: #ef4444;
+            border-radius: 50%;
+            animation: pulse 1s infinite;
+        }
+
+        .time-filter {
+            display: flex;
+            gap: 10px;
+        }
+
+        .time-btn {
+            background: #2a3942;
+            border: none;
+            color: #aebac1;
+            padding: 8px 15px;
+            border-radius: 6px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .time-btn.active {
+            background: linear-gradient(135deg, #f8bbd9, #d4a4eb);
+            color: #2d1b3d;
+            font-weight: 500;
+        }
+
+        .messages-monitor {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            position: relative;
+        }
+
+        .message-card {
+            background: #202c33;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-left: 4px solid #2a3942;
+            transition: all 0.3s ease;
+            position: relative;
+            animation: slideInFromTop 0.5s ease-out;
+        }
+
+        @keyframes slideInFromTop {
+            from {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .message-card.priority-high {
+            border-left-color: #ef4444;
+            background: rgba(239, 68, 68, 0.1);
+            box-shadow: 0 0 20px rgba(239, 68, 68, 0.2);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .message-card.priority-medium {
+            border-left-color: #f59e0b;
+            background: rgba(245, 158, 11, 0.1);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+
+        .message-card.priority-low {
+            border-left-color: #10b981;
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .message-card.resolved {
+            opacity: 0.6;
+            background: #2a3942 !important;
+            border-left-color: #4a5568 !important;
+        }
+
+        .message-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .sender-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex: 1;
+        }
+
+        .sender-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #f8bbd9, #d4a4eb);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+
+        .sender-details {
+            flex: 1;
+        }
+
+        .sender-name {
+            font-weight: 500;
+            color: #e9edef;
+            font-size: 14px;
+        }
+
+        .message-time {
+            font-size: 12px;
+            color: #aebac1;
+        }
+
+        .priority-badge {
+            padding: 4px 8px;
+            border-radius: 15px;
+            font-size: 10px;
+            font-weight: bold;
+            text-transform: uppercase;
+            animation: glow 2s infinite alternate;
+        }
+
+        .priority-high { 
+            background: #ef4444; 
+            color: white;
+            box-shadow: 0 0 10px rgba(239, 68, 68, 0.5);
+        }
+        .priority-medium { 
+            background: #f59e0b; 
+            color: white;
+            box-shadow: 0 0 10px rgba(245, 158, 11, 0.5);
+        }
+        .priority-low { 
+            background: #10b981; 
+            color: white;
+            box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+        }
+
+        @keyframes glow {
+            from { box-shadow: 0 0 5px currentColor; }
+            to { box-shadow: 0 0 15px currentColor; }
+        }
+
+        .message-content {
+            color: #e9edef;
+            line-height: 1.6;
+            margin-bottom: 12px;
+            font-size: 14px;
+            padding: 10px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 8px;
+        }
+
+        .keywords-detected {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 15px;
+        }
+
+        .keyword-tag {
+            background: linear-gradient(135deg, #f8bbd9, #d4a4eb);
+            color: #2d1b3d;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            box-shadow: 0 2px 4px rgba(248, 187, 217, 0.3);
+        }
+
+        .message-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .location-info {
+            font-size: 12px;
+            color: #aebac1;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            background: rgba(0,0,0,0.3);
+            padding: 4px 8px;
+            border-radius: 10px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .action-btn {
+            background: #2a3942;
+            border: none;
+            color: #e9edef;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .action-btn:hover {
+            background: linear-gradient(135deg, #f8bbd9, #d4a4eb);
+            color: #2d1b3d;
+            transform: translateY(-1px);
+        }
+
+        .action-btn.urgent {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+        }
+
+        .action-btn.urgent:hover {
+            background: linear-gradient(135deg, #dc2626, #b91c1c);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+        }
+
+        .action-btn.resolve {
+            background: linear-gradient(135deg, #10b981, #059669);
+            box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+        }
+
+        /* Right Sidebar - Analytics */
+        .analytics-sidebar {
+            background: #202c33;
+            border-left: 1px solid #2a3942;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .analytics-header {
+            background: #2d3748;
+            padding: 20px;
+            border-bottom: 1px solid #2a3942;
+        }
+
+        .analytics-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #e9edef;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, rgba(248, 187, 217, 0.1), rgba(212, 164, 235, 0.1));
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid rgba(248, 187, 217, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(248, 187, 217, 0.2);
+        }
+
+        .stat-number {
+            font-size: 22px;
+            font-weight: bold;
+            color: #f8bbd9;
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: #aebac1;
+            text-transform: uppercase;
+            font-weight: 500;
+        }
+
+        .analytics-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .section {
+            margin-bottom: 25px;
+        }
+
+        .section-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #e9edef;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .alert-list {
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .alert-item {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 8px;
+            padding: 12px;
+            font-size: 12px;
+            margin-bottom: 8px;
+            animation: slideInFromRight 0.3s ease-out;
+        }
+
+        @keyframes slideInFromRight {
+            from {
+                transform: translateX(20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .alert-time {
+            color: #f8bbd9;
+            font-weight: 500;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .alert-employee {
+            color: #e9edef;
+            font-weight: 500;
+        }
+
+        .alert-message {
+            color: #aebac1;
+            margin-top: 4px;
+        }
+
+        .keyword-stats {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .keyword-stat {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 12px;
+            background: rgba(42, 57, 66, 0.5);
+            border-radius: 8px;
+            border: 1px solid #2a3942;
+        }
+
+        .keyword-text {
+            font-size: 12px;
+            color: #e9edef;
+        }
+
+        .keyword-count {
+            background: linear-gradient(135deg, #f8bbd9, #d4a4eb);
+            color: #2d1b3d;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: bold;
+            min-width: 20px;
+            text-align: center;
+        }
+
+        .location-map {
+            background: rgba(42, 57, 66, 0.5);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            color: #aebac1;
+            font-size: 12px;
+            min-height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #2a3942;
+        }
+
+        /* Real-time notification */
+        .notification-bar {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .notification-bar.show {
+            transform: translateX(0);
+        }
+
+        /* Scrollbars */
+        .employee-list::-webkit-scrollbar,
+        .messages-monitor::-webkit-scrollbar,
+        .analytics-content::-webkit-scrollbar,
+        .alert-list::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .employee-list::-webkit-scrollbar-track,
+        .messages-monitor::-webkit-scrollbar-track,
+        .analytics-content::-webkit-scrollbar-track,
+        .alert-list::-webkit-scrollbar-track {
+            background: #111b21;
+        }
+
+        .employee-list::-webkit-scrollbar-thumb,
+        .messages-monitor::-webkit-scrollbar-thumb,
+        .analytics-content::-webkit-scrollbar-thumb,
+        .alert-list::-webkit-scrollbar-thumb {
+            background: #374045;
+            border-radius: 3px;
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .dashboard-container {
+                grid-template-columns: 280px 1fr 320px;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .dashboard-container {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto 1fr;
+            }
+            
+            .analytics-sidebar {
+                display: none;
+            }
+            
+            .employee-sidebar {
+                position: absolute;
+                width: 300px;
+                height: calc(100vh - 75px);
+                z-index: 100;
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+            
+            .employee-sidebar.show {
+                transform: translateX(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Real-time notification -->
+    <div class="notification-bar" id="notificationBar">
+        🚨 High Priority Alert: Employee needs immediate assistance!
+    </div>
+
+    <div class="dashboard-container">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-left">
+                <div class="logo">🛡️</div>
+                <div>
+                    <div class="header-title">Cohesia HR Safety Dashboard</div>
+                    <div class="header-subtitle">Real-time Employee Safety Monitoring</div>
+                </div>
+            </div>
+            <div class="header-right">
+                <div class="status-indicator">
+                    <div class="status-dot"></div>
+                    <span>Live Monitoring</span>
+                </div>
+                <div class="hr-profile">
+                    <div class="hr-avatar">👩‍💼</div>
+                    <span>Sarah Johnson - HR</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Left Sidebar - Employee List -->
+        <div class="employee-sidebar">
+            <div class="sidebar-header">
+                <div class="search-box">
+                    <span>🔍</span>
+                    <input type="text" class="search-input" placeholder="Search employees..." id="employeeSearch">
+                </div>
+                <div class="filter-tabs">
+                    <button class="filter-tab active" data-filter="all">All</button>
+                    <button class="filter-tab" data-filter="alerts">Alerts</button>
+                    <button class="filter-tab" data-filter="online">Online</button>
+                </div>
+            </div>
+            <div class="employee-list" id="employeeList">
+                <!-- Populated by JavaScript -->
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="content-header">
+                <h2 class="content-title">
+                    <div class="live-indicator"></div>
+                    Live Safety Alerts
+                </h2>
+                <div class="time-filter">
+                    <button class="time-btn active" data-time="live">🔴 LIVE</button>
+                    <button class="time-btn" data-time="1h">1H</button>
+                    <button class="time-btn" data-time="24h">24H</button>
+                    <button class="time-btn" data-time="7d">7D</button>
+                </div>
+            </div>
+            <div class="messages-monitor" id="messagesMonitor">
+                <!-- Populated by JavaScript -->
+            </div>
+        </div>
+
+        <!-- Right Sidebar - Analytics -->
+        <div class="analytics-sidebar">
+            <div class="analytics-header">
+                <h3 class="analytics-title">📊 Safety Analytics</h3>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalAlerts">0</div>
+                        <div class="stat-label">Total Alerts</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="activeEmployees">0</div>
+                        <div class="stat-label">Online</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="highPriority">0</div>
+                        <div class="stat-label">Critical</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="resolved">0</div>
+                        <div class="stat-label">Resolved</div>
+                    </div>
+                </div>
+            </div>
+            <div class="analytics-content">
+                <div class="section">
+                    <h4 class="section-title">🚨 Live Alerts</h4>
+                    <div class="alert-list" id="recentAlerts">
+                        <!-- Populated by JavaScript -->
+                    </div>
+                </div>
+                
+                <div class="section">
+                    <h4 class="section-title">🔍 Keyword Tracking</h4>
+                    <div class="keyword-stats" id="keywordStats">
+                        <!-- Populated by JavaScript -->
+                    </div>
+                </div>
+                
+                <div class="section">
+                    <h4 class="section-title">📍 Location Monitor</h4>
+                    <div class="location-map">
+                        <div>
+                            🗺️<br>
+                            Real-time location tracking<br>
+                            <strong>5 active locations</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Safety Keywords Configuration
+        const safetyKeywords = {
+            high: {
+                keywords: ['emergency', 'help me', 'urgent', 'danger', 'threat', 'scared', 'unsafe', 'harassment', 'stalking', 'attack', 'followed', 'threatened'],
+                priority: 'high',
+                color: '#ef4444'
+            },
+            medium: {
+                keywords: ['pickup', 'pick up', 'drop off', 'drop at', 'need ride', 'transport', 'shelter', 'accommodation', 'late night', 'alone', 'working late', 'overtime'],
+                priority: 'medium',
+                color: '#f59e0b'
+            },
+            low: {
+                keywords: ['location', 'share location', 'meet up', 'office', 'travel', 'commute', 'safe', 'check in'],
+                priority: 'low',
+                color: '#10b981'
+            }
+        };
+
+        // Employee Data with realistic status
+        const employees = [
+            { id: "EMP001", name: "Ananya Rao", avatar: "👩‍💻", status: "online", lastSeen: "2 min ago" },
+            { id: "EMP002", name: "Raveena Kumar", avatar: "👩‍🔬", status: "online", lastSeen: "5 min ago" },
+            { id: "EMP003", name: "Sneha Iyer", avatar: "👩‍🎨", status: "alert", lastSeen: "1 min ago", alerts: 2 },
+            { id: "EMP004", name: "Rahitya Das", avatar: "👩‍⚕️", status: "away", lastSeen: "15 min ago" },
+            { id: "EMP005", name: "Meghana Sharma", avatar: "👩‍🏫", status: "online", lastSeen: "3 min ago" },
+            { id: "EMP006", name: "Anjuna Mehta", avatar: "👩‍⚖️", status: "alert", lastSeen: "Just now", alerts: 1 },
+            { id: "EMP007", name: "Nikita Verma", avatar: "👩‍🍳", status: "online", lastSeen: "8 min ago" },
+            { id: "EMP008", name: "Kiranmayi Singh", avatar: "👩‍🎤", status: "online", lastSeen: "4 min ago" },
+            { id: "EMP009", name: "Divya Pillai", avatar: "👩‍✈️", status: "away", lastSeen: "32 min ago" },
+            { id: "EMP010", name: "Manoranjani Patil", avatar: "👩‍🚀", status: "online", lastSeen: "1 min ago" }
+        ];
+
+        // Sample Messages for Monitoring
+        let monitoredMessages = [
+            {
+                id: 1,
+                senderId: "EMP003",
+                senderName: "Sneha Iyer",
+                content: "Emergency - Need pickup assistance from my current location. Not feeling safe walking alone at night. There's someone following me.",
+                timestamp: new Date(Date.now() - 2 * 60 * 1000),
+                location: "Banjara Hills, Road No. 5",
+                detectedKeywords: ['emergency', 'pickup', 'not feeling safe', 'alone', 'followed'],
+                priority: 'high',
+                resolved: false
+            },
+            {
+                id: 2,
+                senderId: "EMP006",
+                senderName: "Anjuna Mehta",
+                content: "Working late tonight, need safe drop at home. Can someone arrange transport? Office area seems deserted.",
+                timestamp: new Date(Date.now() - 5 * 60 * 1000),
+                location: "Hitech City Office",
+                detectedKeywords: ['working late', 'drop at', 'transport', 'alone'],
+                priority: 'medium',
+                resolved: false
+            },
+            {
+                id: 3,
+                senderId: "EMP002",
+                senderName: "Raveena Kumar",
+                content: "Looking for safe accommodation near the new project site for next week.",
+                timestamp: new Date(Date.now() - 25 * 60 * 1000),
+                location: "Gachibowli",
+                detectedKeywords: ['accommodation', 'safe'],
+                priority: 'low',
+                resolved: true
+            }
+        ];
+
+        // Real-time message templates for simulation
+        const messageTemplates = [
+            {
+                templates: [
+                    "Emergency - Need immediate help at {location}. Feeling unsafe.",
+                    "Someone is following me from {location}. Need urgent pickup assistance.",
+                    "Harassment incident at {location}. Please send help immediately.",
+                    "Feeling threatened near {location}. Not safe to travel alone."
+                ],
+                priority: 'high',
+                keywords: ['emergency', 'help', 'unsafe', 'followed', 'harassment', 'threatened']
+            },
+            {
+                templates: [
+                    "Working late at {location}. Need safe transport home.",
+                    "Can someone arrange pickup from {location}? It's getting dark.",
+                    "Need drop-off service to {location} tonight. Area seems unsafe.",
+                    "Looking for accommodation near {location} for upcoming assignment.",
+                    "Overtime shift at {location}. Need safe commute option."
+                ],
+                priority: 'medium',
+                keywords: ['working late', 'pickup', 'drop-off', 'accommodation', 'overtime', 'transport']
+            },
+            {
+                templates: [
+                    "Sharing my location at {location} for safety check-in.",
+                    "Traveling to {location} for meeting. Will update status.",
+                    "Safe arrival at {location}. All good here.",
+                    "Commuting to {location}. Expected arrival in 30 minutes."
+                ],
+                priority: 'low',
+                keywords: ['location', 'safe', 'travel', 'commute', 'check-in']
+            }
+        ];
+
+        const locations = [
+            "Banjara Hills Metro Station", "Hitech City Phase 2", "Gachibowli IT Hub",
+            "Kondapur Main Road", "Madhapur Junction", "Ameerpet Cross Roads",
+            "Secunderabad Station", "Begumpet Airport", "Jubilee Hills Check Post",
+            "Miyapur Metro Terminal", "LB Nagar Circle", "Dilsukhnagar Market"
+        ];
+
+        // Keyword Statistics
+        let keywordStats = {};
+        let messageIdCounter = 100;
+        let selectedEmployee = null;
+
+        // DOM Elements
+        const employeeList = document.getElementById('employeeList');
+        const messagesMonitor = document.getElementById('messagesMonitor');
+        const employeeSearch = document.getElementById('employeeSearch');
+        const recentAlerts = document.getElementById('recentAlerts');
+        const keywordStatsEl = document.getElementById('keywordStats');
+        const notificationBar = document.getElementById('notificationBar');
+
+        // Statistics elements
+        const totalAlertsEl = document.getElementById('totalAlerts');
+        const activeEmployeesEl = document.getElementById('activeEmployees');
+        const highPriorityEl = document.getElementById('highPriority');
+        const resolvedEl = document.getElementById('resolved');
+
+        // Initialize Dashboard
+        function initializeDashboard() {
+            renderEmployeeList();
+            renderMessages();
+            updateAnalytics();
+            calculateKeywordStats();
+            startRealTimeMonitoring();
+        }
+
+        // Render Employee List
+        function renderEmployeeList() {
+            employeeList.innerHTML = '';
+            
+            employees.forEach(employee => {
+                const alertCount = employee.alerts || 0;
+                const employeeEl = document.createElement('div');
+                employeeEl.className = `employee-item ${employee.status === 'alert' ? 'alert' : ''} ${selectedEmployee === employee.id ? 'active' : ''}`;
+                employeeEl.dataset.employeeId = employee.id;
+                
+                employeeEl.innerHTML = `
+                    <div class="employee-avatar">${employee.avatar}</div>
+                    <div class="employee-info">
+                        <div class="employee-name">${employee.name}</div>
+                        <div class="employee-status">
+                            <div class="status-dot-small status-${employee.status}"></div>
+                            ${employee.lastSeen}
+                        </div>
+                    </div>
+                    ${alertCount > 0 ? `<div class="alert-badge">${alertCount}</div>` : ''}
+                `;
+                
+                employeeEl.addEventListener('click', () => filterMessagesByEmployee(employee.id));
+                employeeList.appendChild(employeeEl);
+            });
+        }
+
+        // Filter messages by employee
+        function filterMessagesByEmployee(employeeId) {
+            selectedEmployee = selectedEmployee === employeeId ? null : employeeId;
+            renderEmployeeList();
+            renderMessages();
+        }
+
+        // Detect Keywords in Message
+        function detectKeywords(message) {
+            const detectedKeywords = [];
+            const lowerMessage = message.toLowerCase();
+            
+            Object.values(safetyKeywords).forEach(category => {
+                category.keywords.forEach(keyword => {
+                    if (lowerMessage.includes(keyword.toLowerCase())) {
+                        detectedKeywords.push({
+                            keyword: keyword,
+                            priority: category.priority,
+                            color: category.color
+                        });
+                    }
+                });
+            });
+            
+            return detectedKeywords;
+        }
+
+        // Determine Message Priority
+        function getMessagePriority(detectedKeywords) {
+            if (detectedKeywords.some(k => k.priority === 'high')) return 'high';
+            if (detectedKeywords.some(k => k.priority === 'medium')) return 'medium';
+            return 'low';
+        }
+
+        // Format Time Ago
+        function timeAgo(date) {
+            const now = new Date();
+            const diff = now - date;
+            const minutes = Math.floor(diff / (1000 * 60));
+            const hours = Math.floor(minutes / 60);
+            const days = Math.floor(hours / 24);
+            
+            if (minutes < 1) return 'Just now';
+            if (minutes < 60) return `${minutes}m ago`;
+            if (hours < 24) return `${hours}h ago`;
+            return `${days}d ago`;
+        }
+
+        // Render Messages
+        function renderMessages() {
+            const filteredMessages = selectedEmployee 
+                ? monitoredMessages.filter(msg => msg.senderId === selectedEmployee)
+                : monitoredMessages;
+
+            // Sort by priority and timestamp
+            const sortedMessages = filteredMessages.sort((a, b) => {
+                const priorityOrder = { high: 3, medium: 2, low: 1 };
+                if (priorityOrder[a.priority] !== priorityOrder[b.priority]) {
+                    return priorityOrder[b.priority] - priorityOrder[a.priority];
+                }
+                return b.timestamp - a.timestamp;
+            });
+            
+            messagesMonitor.innerHTML = '';
+            
+            sortedMessages.forEach(message => {
+                const keywords = detectKeywords(message.content);
+                const priority = getMessagePriority(keywords);
+                const employee = employees.find(emp => emp.senderId === message.senderId);
+                
+                const messageEl = document.createElement('div');
+                messageEl.className = `message-card priority-${priority} ${message.resolved ? 'resolved' : ''}`;
+                
+                messageEl.innerHTML = `
+                    <div class="message-header">
+                        <div class="sender-info">
+                            <div class="sender-avatar">${employee?.avatar || '👤'}</div>
+                            <div class="sender-details">
+                                <div class="sender-name">${message.senderName}</div>
+                                <div class="message-time">${timeAgo(message.timestamp)}</div>
+                            </div>
+                        </div>
+                        <div class="priority-badge priority-${priority}">${priority.toUpperCase()}</div>
+                    </div>
+                    <div class="message-content">${message.content}</div>
+                    <div class="keywords-detected">
+                        ${keywords.map(k => `<span class="keyword-tag">${k.keyword}</span>`).join('')}
+                    </div>
+                    <div class="message-actions">
+                        <div class="location-info">
+                            📍 ${message.location}
+                        </div>
+                        <div class="action-buttons">
+                            ${!message.resolved ? `
+                                <button class="action-btn urgent" onclick="contactEmployee('${message.senderId}')">Contact</button>
+                                <button class="action-btn" onclick="assignSupport('${message.id}')">Assign Support</button>
+                                <button class="action-btn resolve" onclick="resolveAlert('${message.id}')">Mark Resolved</button>
+                            ` : '<span style="color: #10b981;">✓ Resolved</span>'}
+                        </div>
+                    </div>
+                `;
+                
+                messagesMonitor.appendChild(messageEl);
+            });
+        }
+
+        // Update Analytics
+        function updateAnalytics() {
+            const totalAlerts = monitoredMessages.filter(msg => !msg.resolved).length;
+            const activeEmployees = employees.filter(emp => emp.status === 'online').length;
+            const highPriority = monitoredMessages.filter(msg => msg.priority === 'high' && !msg.resolved).length;
+            const resolved = monitoredMessages.filter(msg => msg.resolved).length;
+
+            totalAlertsEl.textContent = totalAlerts;
+            activeEmployeesEl.textContent = activeEmployees;
+            highPriorityEl.textContent = highPriority;
+            resolvedEl.textContent = resolved;
+
+            // Update recent alerts
+            const recentUnresolved = monitoredMessages
+                .filter(msg => !msg.resolved)
+                .sort((a, b) => b.timestamp - a.timestamp)
+                .slice(0, 5);
+
+            recentAlerts.innerHTML = '';
+            recentUnresolved.forEach(alert => {
+                const alertEl = document.createElement('div');
+                alertEl.className = 'alert-item';
+                alertEl.innerHTML = `
+                    <span class="alert-time">${timeAgo(alert.timestamp)}</span>
+                    <div class="alert-employee">${alert.senderName}</div>
+                    <div class="alert-message">${alert.content.substring(0, 60)}...</div>
+                `;
+                recentAlerts.appendChild(alertEl);
+            });
+        }
+
+        // Calculate Keyword Statistics
+        function calculateKeywordStats() {
+            keywordStats = {};
+            
+            monitoredMessages.forEach(message => {
+                const keywords = detectKeywords(message.content);
+                keywords.forEach(k => {
+                    keywordStats[k.keyword] = (keywordStats[k.keyword] || 0) + 1;
+                });
+            });
+
+            // Sort by frequency
+            const sortedKeywords = Object.entries(keywordStats)
+                .sort(([,a], [,b]) => b - a)
+                .slice(0, 8);
+
+            keywordStatsEl.innerHTML = '';
+            sortedKeywords.forEach(([keyword, count]) => {
+                const keywordEl = document.createElement('div');
+                keywordEl.className = 'keyword-stat';
+                keywordEl.innerHTML = `
+                    <span class="keyword-text">${keyword}</span>
+                    <span class="keyword-count">${count}</span>
+                `;
+                keywordStatsEl.appendChild(keywordEl);
+            });
+        }
+
+        // Generate Random Message
+        function generateRandomMessage() {
+            const randomEmployee = employees[Math.floor(Math.random() * employees.length)];
+            const randomTemplate = messageTemplates[Math.floor(Math.random() * messageTemplates.length)];
+            const randomLocation = locations[Math.floor(Math.random() * locations.length)];
+            const template = randomTemplate.templates[Math.floor(Math.random() * randomTemplate.templates.length)];
+            
+            const content = template.replace('{location}', randomLocation);
+            
+            const message = {
+                id: messageIdCounter++,
+                senderId: randomEmployee.id,
+                senderName: randomEmployee.name,
+                content: content,
+                timestamp: new Date(),
+                location: randomLocation,
+                detectedKeywords: randomTemplate.keywords.slice(0, Math.floor(Math.random() * 3) + 1),
+                priority: randomTemplate.priority,
+                resolved: false
+            };
+
+            return message;
+        }
+
+        // Add new message to the system
+        function addNewMessage(message) {
+            monitoredMessages.unshift(message);
+            
+            // Update employee alert status
+            const employee = employees.find(emp => emp.id === message.senderId);
+            if (employee && message.priority === 'high') {
+                employee.status = 'alert';
+                employee.alerts = (employee.alerts || 0) + 1;
+                employee.lastSeen = 'Just now';
+            }
+            
+            // Show notification for high priority
+            if (message.priority === 'high') {
+                showNotification(`🚨 ${message.senderName}: ${message.content.substring(0, 50)}...`);
+            }
+            
+            renderEmployeeList();
+            renderMessages();
+            updateAnalytics();
+            calculateKeywordStats();
+        }
+
+        // Show notification
+        function showNotification(text) {
+            notificationBar.textContent = text;
+            notificationBar.classList.add('show');
+            
+            setTimeout(() => {
+                notificationBar.classList.remove('show');
+            }, 5000);
+        }
+
+        // Start Real-time Monitoring
+        function startRealTimeMonitoring() {
+            // Add new messages periodically
+            setInterval(() => {
+                // 30% chance of new message every 8-15 seconds
+                if (Math.random() < 0.3) {
+                    const newMessage = generateRandomMessage();
+                    addNewMessage(newMessage);
+                }
+            }, Math.random() * 7000 + 8000); // 8-15 seconds
+
+            // Simulate status changes
+            setInterval(() => {
+                const randomEmployee = employees[Math.floor(Math.random() * employees.length)];
+                const statuses = ['online', 'away'];
+                const randomStatus = statuses[Math.floor(Math.random() * statuses.length)];
+                
+                if (randomEmployee.status !== 'alert') {
+                    randomEmployee.status = randomStatus;
+                    randomEmployee.lastSeen = randomStatus === 'online' ? 'Just now' : `${Math.floor(Math.random() * 20) + 1}m ago`;
+                    renderEmployeeList();
+                    updateAnalytics();
+                }
+            }, 30000); // Every 30 seconds
+        }
+
+        // Action Functions
+        window.contactEmployee = function(employeeId) {
+            const employee = employees.find(emp => emp.id === employeeId);
+            showNotification(`📞 Calling ${employee.name}... HR support initiated.`);
+        };
+
+        window.assignSupport = function(messageId) {
+            showNotification(`🚐 Support team dispatched for message ID: ${messageId}`);
+        };
+
+        window.resolveAlert = function(messageId) {
+            const message = monitoredMessages.find(msg => msg.id === messageId);
+            if (message) {
+                message.resolved = true;
+                
+                // Update employee status
+                const employee = employees.find(emp => emp.id === message.senderId);
+                if (employee) {
+                    employee.alerts = Math.max((employee.alerts || 1) - 1, 0);
+                    if (employee.alerts === 0) {
+                        employee.status = 'online';
+                    }
+                }
+                
+                renderEmployeeList();
+                renderMessages();
+                updateAnalytics();
+                showNotification(`✅ Alert resolved for ${message.senderName}`);
+            }
+        };
+
+        // Filter tabs
+        document.querySelectorAll('.filter-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                
+                const filter = tab.dataset.filter;
+                // Implement filtering logic here
+                renderEmployeeList();
+            });
+        });
+
+        // Time filter tabs
+        document.querySelectorAll('.time-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.time-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                // Implement time filtering logic here
+            });
+        });
+
+        // Search functionality
+        employeeSearch.addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            const employeeItems = document.querySelectorAll('.employee-item');
+            
+            employeeItems.forEach(item => {
+                const name = item.querySelector('.employee-name').textContent.toLowerCase();
+                item.style.display = name.includes(searchTerm) ? 'flex' : 'none';
+            });
+        });
+
+        // Initialize the dashboard
+        initializeDashboard();
+
+        // Add some initial random messages
+        setTimeout(() => addNewMessage(generateRandomMessage()), 3000);
+        setTimeout(() => addNewMessage(generateRandomMessage()), 8000);
+        setTimeout(() => addNewMessage(generateRandomMessage()), 15000);
+    </script>
+</body>
+</html>

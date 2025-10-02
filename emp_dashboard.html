@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cohesia - Women's Safety Network</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+            background: #111b21;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .whatsapp-container {
+            display: flex;
+            height: 100vh;
+            background: #111b21;
+        }
+
+        /* Left Sidebar */
+        .sidebar {
+            width: 30%;
+            min-width: 300px;
+            background: #111b21;
+            border-right: 1px solid #2a3942;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        .sidebar-header {
+            background: #202c33;
+            padding: 10px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #2a3942;
+        }
+
+        .profile-section {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .profile-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #f8bbd9, #d4a4eb);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .profile-name {
+            color: #e9edef;
+            font-size: 16px;
+            font-weight: 400;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 15px;
+        }
+
+        .action-btn {
+            background: none;
+            border: none;
+            color: #aebac1;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 50%;
+            transition: background 0.2s;
+        }
+
+        .action-btn:hover {
+            background: #2a3942;
+        }
+
+        /* Search */
+        .search-container {
+            padding: 7px 12px;
+            background: #111b21;
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            background: #202c33;
+            border-radius: 8px;
+            padding: 8px 12px;
+        }
+
+        .search-icon {
+            color: #aebac1;
+            margin-right: 10px;
+            font-size: 16px;
+        }
+
+        .search-input {
+            background: none;
+            border: none;
+            color: #e9edef;
+            font-size: 15px;
+            width: 100%;
+            outline: none;
+        }
+
+        .search-input::placeholder {
+            color: #aebac1;
+        }
+
+        /* Chat List */
+        .chat-list {
+            flex: 1;
+            overflow-y: auto;
+            background: #111b21;
+        }
+
+        .chat-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            border-bottom: 1px solid #2a3942;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .chat-item:hover {
+            background: #2a3942;
+        }
+
+        .chat-item.active {
+            background: #2a3942;
+        }
+
+        .chat-avatar {
+            width: 49px;
+            height: 49px;
+            border-radius: 50%;
+            margin-right: 15px;
+            background: linear-gradient(135deg, #f8bbd9, #d4a4eb);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .chat-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .chat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2px;
+        }
+
+        .chat-name {
+            color: #e9edef;
+            font-size: 17px;
+            font-weight: 400;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .chat-time {
+            color: #aebac1;
+            font-size: 12px;
+            white-space: nowrap;
+        }
+
+        .chat-preview {
+            color: #aebac1;
+            font-size: 14px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .role-badge {
+            background: linear-gradient(135deg, #f8bbd9, #d4a4eb);
+            color: #2d1b3d;
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 10px;
+            margin-left: 8px;
+            font-weight: 500;
+        }
+
+        /* Main Chat Area */
+        .chat-main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: #0b141a;
+        }
+
+        .main-header {
+            background: #202c33;
+            padding: 10px 16px;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid #2a3942;
+        }
+
+        .main-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #f8bbd9, #d4a4eb);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-size: 18px;
+        }
+
+        .main-info {
+            flex: 1;
+        }
+
+        .main-name {
+            color: #e9edef;
+            font-size: 16px;
+            font-weight: 400;
+            margin-bottom: 1px;
+        }
+
+        .main-status {
+            color: #aebac1;
+            font-size: 13px;
+        }
+
+        /* Chat Messages */
+        .messages-container {
+            flex: 1;
+            overflow-y: auto;
+            background: #0b141a;
+            background-image: url("data:image/svg+xml,%3csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3e%3cdefs%3e%3cpattern id='a' patternUnits='userSpaceOnUse' width='20' height='20' patternTransform='scale(0.5) rotate(0)'%3e%3crect x='0' y='0' width='100%25' height='100%25' fill='%23111b21'/%3e%3cpath d='M 10,-2.55e-7 V 20 Z M -1.1677362e-8,10 H 20 Z' stroke-width='0.5' stroke='%23182229' fill='none'/%3e%3c/pattern%3e%3c/defs%3e%3crect width='100%25' height='100%25' fill='url(%23a)'/%3e%3c/svg%3e");
+            padding: 20px;
+        }
+
+        .message {
+            display: flex;
+            margin-bottom: 12px;
+            max-width: 100%;
+        }
+
+        .message.sent {
+            justify-content: flex-end;
+        }
+
+        .message-content {
+            max-width: 65%;
+            padding: 6px 7px 8px 9px;
+            border-radius: 7.5px;
+            position: relative;
+            word-wrap: break-word;
+        }
+
+        .message.received .message-content {
+            background: #202c33;
+            color: #e9edef;
+        }
+
+        .message.sent .message-content {
+            background: #005c4b;
+            color: #e9edef;
+        }
+
+        .message-text {
+            font-size: 14px;
+            line-height: 19px;
+            margin-bottom: 4px;
+        }
+
+        .message-time {
+            font-size: 11px;
+            color: #aebac1;
+            text-align: right;
+            margin-top: 4px;
+        }
+
+        .sender-name {
+            color: #f8bbd9;
+            font-weight: 500;
+            margin-bottom: 2px;
+            font-size: 13px;
+        }
+
+        /* Input Area */
+        .input-container {
+            background: #202c33;
+            padding: 5px 16px 5px 5px;
+            display: flex;
+            align-items: end;
+            gap: 5px;
+        }
+
+        .input-actions-left {
+            display: flex;
+            align-items: center;
+            padding: 5px;
+        }
+
+        .input-btn {
+            background: none;
+            border: none;
+            color: #aebac1;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+            transition: background 0.2s;
+        }
+
+        .input-btn:hover {
+            background: #2a3942;
+        }
+
+        .message-input-container {
+            flex: 1;
+            background: #2a3942;
+            border-radius: 21px;
+            display: flex;
+            align-items: center;
+            padding: 9px 12px;
+            margin: 5px 0;
+        }
+
+        .message-input {
+            flex: 1;
+            background: none;
+            border: none;
+            color: #e9edef;
+            font-size: 15px;
+            outline: none;
+            line-height: 20px;
+            max-height: 100px;
+            resize: none;
+            overflow-y: auto;
+        }
+
+        .message-input::placeholder {
+            color: #aebac1;
+        }
+
+        .send-btn {
+            background: none;
+            border: none;
+            color: #aebac1;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 8px;
+            margin-left: 5px;
+        }
+
+        /* Welcome Screen */
+        .welcome-screen {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: #0b141a;
+            background-image: url("data:image/svg+xml,%3csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3e%3cdefs%3e%3cpattern id='a' patternUnits='userSpaceOnUse' width='20' height='20' patternTransform='scale(0.5) rotate(0)'%3e%3crect x='0' y='0' width='100%25' height='100%25' fill='%23111b21'/%3e%3cpath d='M 10,-2.55e-7 V 20 Z M -1.1677362e-8,10 H 20 Z' stroke-width='0.5' stroke='%23182229' fill='none'/%3e%3c/pattern%3e%3c/defs%3e%3crect width='100%25' height='100%25' fill='url(%23a)'/%3e%3c/svg%3e");
+        }
+
+        .welcome-logo {
+            width: 320px;
+            height: 320px;
+            background: linear-gradient(135deg, #f8bbd9, #d4a4eb);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 120px;
+            margin-bottom: 28px;
+            opacity: 0.8;
+        }
+
+        .welcome-title {
+            color: #e9edef;
+            font-size: 32px;
+            font-weight: 300;
+            margin-bottom: 14px;
+            text-align: center;
+        }
+
+        .welcome-subtitle {
+            color: #aebac1;
+            font-size: 14px;
+            text-align: center;
+            line-height: 20px;
+            max-width: 460px;
+        }
+
+        /* Quick Actions */
+        .quick-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 10px;
+            padding: 0 16px;
+        }
+
+        .quick-btn {
+            background: #2a3942;
+            border: none;
+            color: #e9edef;
+            padding: 8px 12px;
+            border-radius: 15px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .quick-btn:hover {
+            background: #374045;
+        }
+
+        /* Location Message Style */
+        .location-message {
+            background: #1f3a5f !important;
+            border: 1px solid #4a90b8;
+        }
+
+        /* Scrollbar */
+        .chat-list::-webkit-scrollbar,
+        .messages-container::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .chat-list::-webkit-scrollbar-track,
+        .messages-container::-webkit-scrollbar-track {
+            background: #111b21;
+        }
+
+        .chat-list::-webkit-scrollbar-thumb,
+        .messages-container::-webkit-scrollbar-thumb {
+            background: #374045;
+            border-radius: 3px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 35%;
+                min-width: 280px;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .whatsapp-container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: 40%;
+            }
+            
+            .chat-main {
+                height: 60%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="whatsapp-container">
+        <!-- Left Sidebar -->
+        <div class="sidebar">
+            <!-- Header -->
+            <div class="sidebar-header">
+                <div class="profile-section">
+                    <div class="profile-avatar">👩‍💼</div>
+                    <div class="profile-name">Cohesia Network</div>
+                </div>
+                <div class="header-actions">
+                    <button class="action-btn" title="New chat">💬</button>
+                    <button class="action-btn" title="Menu">⋮</button>
+                </div>
+            </div>
+
+            <!-- Search -->
+            <div class="search-container">
+                <div class="search-box">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" class="search-input" placeholder="Search or start new chat" id="searchInput">
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="quick-actions">
+                <button class="quick-btn" data-message="Need pickup assistance from my current location">🚗 Pickup</button>
+                <button class="quick-btn" data-message="Need drop-off help">📍 Drop-off</button>
+                <button class="quick-btn" data-message="Looking for safe accommodation">🏠 Shelter</button>
+                <button class="quick-btn" data-message="Emergency - need immediate help">🚨 Emergency</button>
+            </div>
+
+            <!-- Chat List -->
+            <div class="chat-list" id="chatList">
+                <!-- Chats will be populated by JavaScript -->
+            </div>
+        </div>
+
+        <!-- Main Chat Area -->
+        <div class="chat-main" id="chatMain">
+            <!-- Welcome Screen -->
+            <div class="welcome-screen" id="welcomeScreen">
+                <div class="welcome-logo">💜</div>
+                <h1 class="welcome-title">Cohesia Women's Network</h1>
+                <p class="welcome-subtitle">
+                    A safe and secure space for women to connect, seek support, and access assistance.
+                    Select a contact to start a conversation or use quick actions for immediate help.
+                </p>
+            </div>
+
+            <!-- Chat Interface (hidden initially) -->
+            <div style="display: none; flex-direction: column; height: 100%;" id="chatInterface">
+                <div class="main-header" id="mainHeader">
+                    <!-- Will be populated when chat is selected -->
+                </div>
+                
+                <div class="messages-container" id="messagesContainer">
+                    <!-- Messages will be populated by JavaScript -->
+                </div>
+
+                <div class="input-container">
+                    <div class="input-actions-left">
+                        <button class="input-btn" id="locationBtn" title="Share location">📍</button>
+                    </div>
+                    <div class="message-input-container">
+                        <textarea class="message-input" id="messageInput" placeholder="Type a message" rows="1"></textarea>
+                    </div>
+                    <button class="send-btn" id="sendBtn" title="Send">📤</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Users data
+        const users = [
+            { employeeId: "HR001", name: "Sarah Johnson", phoneNumber: "+91-9999911111", role: "hr", avatar: "👩‍💼", status: "Available for support" },
+            { employeeId: "EMP001", name: "Ananya Rao", phoneNumber: "+91-9000011111", role: "employee", avatar: "👩‍💻", status: "Online" },
+            { employeeId: "EMP002", name: "Raveena Kumar", phoneNumber: "+91-9000022222", role: "employee", avatar: "👩‍🔬", status: "Online" },
+            { employeeId: "EMP003", name: "Sneha Iyer", phoneNumber: "+91-9000033333", role: "employee", avatar: "👩‍🎨", status: "Online" },
+            { employeeId: "EMP004", name: "Rahitya Das", phoneNumber: "+91-9000044444", role: "employee", avatar: "👩‍⚕️", status: "Away" },
+            { employeeId: "EMP005", name: "Meghana Sharma", phoneNumber: "+91-9000055555", role: "employee", avatar: "👩‍🏫", status: "Online" },
+            { employeeId: "EMP006", name: "Anjuna Mehta", phoneNumber: "+91-9000066666", role: "employee", avatar: "👩‍⚖️", status: "Online" },
+            { employeeId: "EMP007", name: "Nikita Verma", phoneNumber: "+91-9000077777", role: "employee", avatar: "👩‍🍳", status: "Online" },
+            { employeeId: "EMP008", name: "Kiranmayi Singh", phoneNumber: "+91-9000088888", role: "employee", avatar: "👩‍🎤", status: "Online" },
+            { employeeId: "EMP009", name: "Divya Pillai", phoneNumber: "+91-9000099999", role: "employee", avatar: "👩‍✈️", status: "Away" },
+            { employeeId: "EMP010", name: "Manoranjani Patil", phoneNumber: "+91-9000010101", role: "employee", avatar: "👩‍🚀", status: "Online" }
+        ];
+
+        // Group chat data
+        const groupChat = {
+            id: "GROUP001",
+            name: "Cohesia Women's Network",
+            avatar: "👥",
+            members: "11 members",
+            status: "11 members online",
+            isGroup: true
+        };
+
+        // Sample conversations
+        const conversations = {
+            "GROUP001": [
+                { sender: "Sarah Johnson", content: "Good morning everyone! Starting a new day with positive energy. Remember, we're here for each other.", time: "08:30", sent: false },
+                { sender: "Ananya Rao", content: "Morning Sarah! Thanks for the motivation. Anyone planning to work from the office today?", time: "08:32", sent: false },
+                { sender: "Raveena Kumar", content: "I'll be in the office. Can share a ride if anyone needs pickup from Hitech City area", time: "08:35", sent: false },
+                { sender: "Sneha Iyer", content: "That's so kind of you Raveena! This support system is amazing", time: "08:37", sent: false },
+                { sender: "Meghana Sharma", content: "Quick question - does anyone know of good safe parking spots near the new office building?", time: "08:40", sent: false },
+                { sender: "Nikita Verma", content: "I park in the basement level. Well lit and has security cameras. I can show you the way!", time: "08:42", sent: false },
+                { sender: "Divya Pillai", content: "Ladies, there's a self-defense workshop this weekend. HR is sponsoring it. Worth attending!", time: "08:45", sent: false },
+                { sender: "Kiranmayi Singh", content: "Count me in for the workshop! Also, coffee meetup after work anyone?", time: "08:47", sent: false }
+            ],
+            "HR001": [
+                { sender: "Sarah Johnson", content: "Hello! I'm here to support you. How can I help today?", time: "09:30", sent: false },
+                { sender: "You", content: "Thank you for being available. This support system means a lot.", time: "09:32", sent: true }
+            ],
+            "EMP001": [
+                { sender: "Ananya Rao", content: "Hey! Hope you're doing well today.", time: "10:15", sent: false }
+            ],
+            "EMP002": [
+                { sender: "Raveena Kumar", content: "The transport service yesterday was so helpful. Thank you!", time: "11:20", sent: false }
+            ]
+        };
+
+        // Group chat messages pool for simulation
+        const groupMessages = [
+            { sender: "Sarah Johnson", messages: [
+                "Remember to take breaks and prioritize your wellbeing today",
+                "Safety tip: Always inform someone about your travel plans",
+                "Our employee assistance program is available 24/7",
+                "Proud of this supportive community we've built together"
+            ]},
+            { sender: "Ananya Rao", messages: [
+                "Working late today, anyone else in the office?",
+                "Thanks for the lunch recommendation yesterday!",
+                "The new cafeteria has really good healthy options",
+                "Anyone up for a team walk during lunch break?"
+            ]},
+            { sender: "Raveena Kumar", messages: [
+                "Offering rides from Banjara Hills area this evening",
+                "That wellness session was so refreshing",
+                "Found a great women-friendly gym nearby, sharing location",
+                "Movie night this weekend, all welcome!"
+            ]},
+            { sender: "Sneha Iyer", messages: [
+                "Sharing some positive quotes to brighten everyone's day",
+                "The art therapy session helped me so much",
+                "Anyone interested in a book club?",
+                "Grateful for this supportive work environment"
+            ]},
+            { sender: "Meghana Sharma", messages: [
+                "Quick safety reminder: trust your instincts always",
+                "Carpooling available from Gachibowli tomorrow",
+                "The yoga class was amazing, highly recommend",
+                "Anyone know good safe routes for evening jogs?"
+            ]},
+            { sender: "Nikita Verma", messages: [
+                "Cooking healthy meals this week, sharing recipes",
+                "That financial planning workshop was so helpful",
+                "Anyone want to join the weekend hiking group?",
+                "Celebrating small wins today, what are yours?"
+            ]},
+            { sender: "Kiranmayi Singh", messages: [
+                "Music therapy session tomorrow, all are welcome",
+                "Sharing contact of a trusted women's health specialist",
+                "Coffee break in 10 minutes, join if you can",
+                "Positive vibes only for this beautiful day"
+            ]},
+            { sender: "Divya Pillai", messages: [
+                "Travel safety tips from my recent business trip",
+                "Networking event next week focused on women in tech",
+                "Anyone free for lunch? Trying the new place nearby",
+                "Mentorship program applications are open"
+            ]},
+            { sender: "Manoranjani Patil", messages: [
+                "Childcare recommendations anyone? Moving to a new area",
+                "That time management workshop changed my perspective",
+                "Organizing a family-friendly weekend picnic",
+                "Support group meeting was really meaningful"
+            ]}
+        ];
+
+        // Safe locations
+        const locations = [
+            "Banjara Hills, Road No. 5, Hyderabad",
+            "Hitech City, Phase 2, Hyderabad",
+            "MG Road, Bengaluru",
+            "Connaught Place, New Delhi",
+            "Marine Drive, Mumbai",
+            "Park Street, Kolkata"
+        ];
+
+        // DOM elements
+        const chatList = document.getElementById('chatList');
+        const welcomeScreen = document.getElementById('welcomeScreen');
+        const chatInterface = document.getElementById('chatInterface');
+        const mainHeader = document.getElementById('mainHeader');
+        const messagesContainer = document.getElementById('messagesContainer');
+        const messageInput = document.getElementById('messageInput');
+        const sendBtn = document.getElementById('sendBtn');
+        const locationBtn = document.getElementById('locationBtn');
+        const searchInput = document.getElementById('searchInput');
+        const quickBtns = document.querySelectorAll('.quick-btn');
+
+        let activeChat = null;
+
+        // Initialize chat list
+        function initializeChatList() {
+            chatList.innerHTML = '';
+            
+            // Add group chat first
+            const groupItem = document.createElement('div');
+            groupItem.className = 'chat-item';
+            groupItem.dataset.userId = 'GROUP001';
+            
+            const groupLastMessage = getLastMessage('GROUP001');
+            groupItem.innerHTML = `
+                <div class="chat-avatar">${groupChat.avatar}</div>
+                <div class="chat-info">
+                    <div class="chat-header">
+                        <div class="chat-name">
+                            ${groupChat.name}
+                        </div>
+                        <div class="chat-time">${groupLastMessage.time}</div>
+                    </div>
+                    <div class="chat-preview">${groupLastMessage.preview}</div>
+                </div>
+            `;
+            
+            groupItem.addEventListener('click', () => openGroupChat());
+            chatList.appendChild(groupItem);
+            
+            // Add individual users
+            users.forEach(user => {
+                const lastMessage = getLastMessage(user.employeeId);
+                const chatItem = document.createElement('div');
+                chatItem.className = 'chat-item';
+                chatItem.dataset.userId = user.employeeId;
+                
+                chatItem.innerHTML = `
+                    <div class="chat-avatar">${user.avatar}</div>
+                    <div class="chat-info">
+                        <div class="chat-header">
+                            <div class="chat-name">
+                                ${user.name}
+                                ${user.role === 'hr' ? '<span class="role-badge">HR SUPPORT</span>' : ''}
+                            </div>
+                            <div class="chat-time">${lastMessage.time}</div>
+                        </div>
+                        <div class="chat-preview">${lastMessage.preview}</div>
+                    </div>
+                `;
+                
+                chatItem.addEventListener('click', () => openChat(user));
+                chatList.appendChild(chatItem);
+            });
+        }
+
+        // Open group chat
+        function openGroupChat() {
+            activeChat = groupChat;
+            
+            // Update active chat styling
+            document.querySelectorAll('.chat-item').forEach(item => item.classList.remove('active'));
+            document.querySelector('[data-user-id="GROUP001"]').classList.add('active');
+            
+            // Hide welcome screen, show chat interface
+            welcomeScreen.style.display = 'none';
+            chatInterface.style.display = 'flex';
+            
+            // Update header
+            mainHeader.innerHTML = `
+                <div class="main-avatar">${groupChat.avatar}</div>
+                <div class="main-info">
+                    <div class="main-name">${groupChat.name}</div>
+                    <div class="main-status">${groupChat.status}</div>
+                </div>
+            `;
+            
+            // Load messages
+            loadMessages('GROUP001');
+        }
+
+        // Get last message for preview
+        function getLastMessage(userId) {
+            const userConversation = conversations[userId];
+            if (userConversation && userConversation.length > 0) {
+                const lastMsg = userConversation[userConversation.length - 1];
+                return {
+                    preview: lastMsg.content.substring(0, 50) + (lastMsg.content.length > 50 ? '...' : ''),
+                    time: lastMsg.time
+                };
+            }
+            return { preview: 'Tap to start conversation', time: '' };
+        }
+
+        // Open chat
+        function openChat(user) {
+            activeChat = user;
+            
+            // Update active chat styling
+            document.querySelectorAll('.chat-item').forEach(item => item.classList.remove('active'));
+            document.querySelector(`[data-user-id="${user.employeeId}"]`).classList.add('active');
+            
+            // Hide welcome screen, show chat interface
+            welcomeScreen.style.display = 'none';
+            chatInterface.style.display = 'flex';
+            
+            // Update header
+            mainHeader.innerHTML = `
+                <div class="main-avatar">${user.avatar}</div>
+                <div class="main-info">
+                    <div class="main-name">${user.name}</div>
+                    <div class="main-status">${user.status}</div>
+                </div>
+            `;
+            
+            // Load messages
+            loadMessages(user.employeeId);
+        }
+
+        // Load messages
+        function loadMessages(userId) {
+            messagesContainer.innerHTML = '';
+            const userMessages = conversations[userId] || [];
+            
+            userMessages.forEach(message => {
+                addMessageToUI(message, message.sent);
+            });
+            
+            scrollToBottom();
+        }
+
+        // Add message to UI
+        function addMessageToUI(message, isSent) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${isSent ? 'sent' : 'received'}`;
+            
+            messageDiv.innerHTML = `
+                <div class="message-content">
+                    ${!isSent ? `<div class="sender-name">${message.sender}</div>` : ''}
+                    <div class="message-text">${message.content}</div>
+                    <div class="message-time">${message.time}</div>
+                </div>
+            `;
+            
+            messagesContainer.appendChild(messageDiv);
+        }
+
+        // Send message
+        function sendMessage(content) {
+            if (!activeChat || !content.trim()) return;
+            
+            const now = new Date();
+            const time = now.toTimeString().slice(0, 5);
+            
+            const message = {
+                sender: "You",
+                content: content.trim(),
+                time: time,
+                sent: true
+            };
+            
+            // Add to conversation
+            if (!conversations[activeChat.employeeId]) {
+                conversations[activeChat.employeeId] = [];
+            }
+            conversations[activeChat.employeeId].push(message);
+            
+            // Add to UI
+            addMessageToUI(message, true);
+            scrollToBottom();
+            
+            // Clear input
+            messageInput.value = '';
+            messageInput.style.height = 'auto';
+            
+            // Update chat list
+            updateChatPreview(activeChat.employeeId);
+        }
+
+        // Update chat preview in sidebar
+        function updateChatPreview(userId) {
+            const chatItem = document.querySelector(`[data-user-id="${userId}"]`);
+            const lastMessage = getLastMessage(userId);
+            const previewElement = chatItem.querySelector('.chat-preview');
+            const timeElement = chatItem.querySelector('.chat-time');
+            
+            previewElement.textContent = lastMessage.preview;
+            timeElement.textContent = lastMessage.time;
+        }
+
+        // Scroll to bottom
+        function scrollToBottom() {
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        // Auto-resize textarea
+        messageInput.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = Math.min(this.scrollHeight, 100) + 'px';
+        });
+
+        // Send button click
+        sendBtn.addEventListener('click', () => {
+            sendMessage(messageInput.value);
+        });
+
+        // Enter key to send
+        messageInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage(messageInput.value);
+            }
+        });
+
+        // Location sharing
+        locationBtn.addEventListener('click', () => {
+            if (!activeChat) return;
+            
+            const randomLocation = locations[Math.floor(Math.random() * locations.length)];
+            sendMessage(`📍 Location shared: ${randomLocation}`);
+        });
+
+        // Quick actions
+        quickBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                if (!activeChat) {
+                    // If no chat active, open HR support
+                    const hrUser = users.find(u => u.role === 'hr');
+                    if (hrUser) openChat(hrUser);
+                }
+                if (activeChat) {
+                    sendMessage(btn.getAttribute('data-message'));
+                }
+            });
+        });
+
+        // Search functionality
+        searchInput.addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            document.querySelectorAll('.chat-item').forEach(item => {
+                const name = item.querySelector('.chat-name').textContent.toLowerCase();
+                item.style.display = name.includes(searchTerm) ? 'flex' : 'none';
+            });
+        });
+
+        // Live group chat simulation
+        let messageInterval;
+        
+        function startLiveGroupChat() {
+            if (messageInterval) clearInterval(messageInterval);
+            
+            messageInterval = setInterval(() => {
+                // Random chance of new message (30% every 15-30 seconds)
+                if (Math.random() < 0.3) {
+                    addRandomGroupMessage();
+                }
+            }, Math.random() * 15000 + 15000); // 15-30 seconds interval
+        }
+        
+        function addRandomGroupMessage() {
+            const randomSender = groupMessages[Math.floor(Math.random() * groupMessages.length)];
+            const randomMessage = randomSender.messages[Math.floor(Math.random() * randomSender.messages.length)];
+            
+            const now = new Date();
+            const time = now.toTimeString().slice(0, 5);
+            
+            const message = {
+                sender: randomSender.sender,
+                content: randomMessage,
+                time: time,
+                sent: false
+            };
+            
+            // Add to group conversation
+            conversations['GROUP001'].push(message);
+            
+            // If group chat is active, update UI
+            if (activeChat && activeChat.id === 'GROUP001') {
+                addMessageToUI(message, false);
+                scrollToBottom();
+            }
+            
+            // Update group chat preview in sidebar
+            updateChatPreview('GROUP001');
+        }
+
+        // Initialize
+        initializeChatList();
+        startLiveGroupChat();
+        
+        // Add initial activity to group chat
+        setTimeout(() => addRandomGroupMessage(), 5000);
+        setTimeout(() => addRandomGroupMessage(), 12000);
+        setTimeout(() => addRandomGroupMessage(), 18000);
+    </script>
+</body>
+</html>

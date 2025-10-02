@@ -1,0 +1,97 @@
+{
+  "users": [
+    {
+      "employeeId": "HR001",
+      "password": "hrpass123",
+      "name": "Sarah Johnson",
+      "phoneNumber": "+91-9999911111",
+      "role": "HR"
+    },
+    {
+      "employeeId": "EMP001",
+      "password": "emp123",
+      "name": "Ananya Rao",
+      "phoneNumber": "+91-9000011111",
+      "role": "employee"
+    },
+    {
+      "employeeId": "EMP002",
+      "password": "emp234",
+      "name": "Raveena Kumar",
+      "phoneNumber": "+91-9000022222",
+      "role": "employee"
+    },
+    {
+      "employeeId": "EMP003",
+      "password": "emp345",
+      "name": "Sneha Iyer",
+      "phoneNumber": "+91-9000033333",
+      "role": "employee"
+    },
+    {
+      "employeeId": "EMP004",
+      "password": "emp456",
+      "name": "Rahitya Das",
+      "phoneNumber": "+91-9000044444",
+      "role": "employee"
+    },
+    {
+      "employeeId": "EMP005",
+      "password": "emp567",
+      "name": "Meghana Sharma",
+      "phoneNumber": "+91-9000055555",
+      "role": "employee"
+    },
+    {
+      "employeeId": "EMP006",
+      "password": "emp678",
+      "name": "Anjuna Mehta",
+      "phoneNumber": "+91-9000066666",
+      "role": "employee"
+    },
+    {
+      "employeeId": "EMP007",
+      "password": "emp789",
+      "name": "Nikita Verma",
+      "phoneNumber": "+91-9000077777",
+      "role": "employee"
+    },
+    {
+      "employeeId": "EMP008",
+      "password": "emp890",
+      "name": "Kiranmayi Singh",
+      "phoneNumber": "+91-9000088888",
+      "role": "employee"
+    },
+    {
+      "employeeId": "EMP009",
+      "password": "emp901",
+      "name": "Divya Pillai",
+      "phoneNumber": "+91-9000099999",
+      "role": "employee"
+    },
+    {
+      "employeeId": "EMP010",
+      "password": "emp012",
+      "name": "Manoranjani Patil",
+      "phoneNumber": "+91-9000010101",
+      "role": "employee"
+    },
+    {
+      "name": "Test User",
+      "employeeId": "TEST001",
+      "phoneNumber": "+91-9999999999",
+      "password": "test123",
+      "role": "employee",
+      "createdAt": "2025-09-07T06:59:09.443Z"
+    },
+    {
+      "name": "Agilisium",
+      "employeeId": "COMP_1759291289414",
+      "phoneNumber": "0986607373",
+      "password": "keers123",
+      "role": "company",
+      "createdAt": "2025-10-01T04:01:29.488Z"
+    }
+  ]
+}

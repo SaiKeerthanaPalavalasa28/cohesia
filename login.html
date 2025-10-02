@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Cohesia</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-pink: #f8bbd9;
+            --light-pink: #fdeef4;
+            --lavender: #e8d5ff;
+            --cream: #fff8e7;
+            --soft-purple: #d4a4eb;
+            --text-dark: #2d1b3d;
+            --text-light: #6b4c7a;
+            --white: #ffffff;
+            --shadow: rgba(212, 164, 235, 0.3);
+        }
+
+        [data-theme="dark"] {
+            --primary-pink: #8b5a7a;
+            --light-pink: #2a1e28;
+            --lavender: #3d2a4d;
+            --cream: #2d2520;
+            --soft-purple: #6b4a7a;
+            --text-dark: #e8d5ff;
+            --text-light: #c4a4d3;
+            --white: #1a1a1a;
+            --shadow: rgba(139, 90, 122, 0.4);
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--light-pink) 0%, var(--lavender) 50%, var(--cream) 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-dark);
+            transition: all 0.3s ease;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Background Animation */
+        body::before {
+            content: '';
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(248, 187, 217, 0.1) 0%, transparent 50%);
+            animation: floating 8s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        @keyframes floating {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            33% { transform: translateY(-30px) rotate(2deg); }
+            66% { transform: translateY(15px) rotate(-1deg); }
+        }
+
+        /* Back to Home Button */
+        .back-home {
+            position: fixed;
+            top: 2rem;
+            left: 2rem;
+            background: rgba(255, 255, 255, 0.9);
+            color: var(--soft-purple);
+            padding: 0.8rem 1.5rem;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 500;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 4px 20px var(--shadow);
+            z-index: 1000;
+            font-size: 0.9rem;
+        }
+
+        .back-home:hover {
+            background: white;
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 8px 30px var(--shadow);
+            color: var(--text-dark);
+        }
+
+        /* Theme Toggle */
+        .theme-toggle {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            background: var(--primary-pink);
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            font-size: 1.3rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px var(--shadow);
+            z-index: 1000;
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.1) rotate(15deg);
+            box-shadow: 0 6px 25px var(--shadow);
+        }
+
+        /* Main Container */
+        .login-container {
+            text-align: center;
+            max-width: 600px;
+            width: 100%;
+            padding: 2rem;
+            position: relative;
+            z-index: 2;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Header */
+        .header {
+            margin-bottom: 3rem;
+        }
+
+        .logo {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--text-dark);
+            margin-bottom: 1rem;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: var(--text-light);
+            font-style: italic;
+            line-height: 1.6;
+        }
+
+        /* Login Cards Container */
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        /* Login Card Styles */
+        .login-card {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 25px;
+            padding: 3rem 2rem;
+            text-decoration: none;
+            color: var(--text-dark);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 8px 32px var(--shadow);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            position: relative;
+            overflow: hidden;
+            animation: cardSlideIn 0.8s ease-out;
+            animation-fill-mode: both;
+        }
+
+        .login-card:nth-child(1) {
+            animation-delay: 0.2s;
+        }
+
+        .login-card:nth-child(2) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes cardSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .login-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, var(--primary-pink) 0%, var(--soft-purple) 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: -1;
+        }
+
+        .login-card:hover::before {
+            opacity: 0.1;
+        }
+
+        .login-card:hover {
+            transform: translateY(-10px) scale(1.03);
+            box-shadow: 0 20px 50px rgba(212, 164, 235, 0.4);
+            color: var(--text-dark);
+        }
+
+        /* Card Icons */
+        .card-icon {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            display: block;
+            transition: transform 0.3s ease;
+        }
+
+        .login-card:hover .card-icon {
+            transform: scale(1.2) rotate(5deg);
+        }
+
+        /* Card Content */
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            color: var(--text-dark);
+        }
+
+        .card-description {
+            font-size: 1rem;
+            color: var(--text-light);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-button {
+            display: inline-block;
+            background: linear-gradient(45deg, var(--primary-pink), var(--soft-purple));
+            color: white;
+            padding: 0.8rem 2rem;
+            border-radius: 50px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .login-card:hover .card-button {
+            background: linear-gradient(45deg, var(--soft-purple), var(--primary-pink));
+            transform: scale(1.05);
+        }
+
+        /* HR Card Specific Styling */
+        .hr-card {
+            border-left: 4px solid var(--soft-purple);
+        }
+
+        /* Employee Card Specific Styling */
+        .employee-card {
+            border-left: 4px solid var(--primary-pink);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .back-home,
+            .theme-toggle {
+                top: 1rem;
+                padding: 0.6rem 1.2rem;
+                font-size: 0.8rem;
+            }
+
+            .theme-toggle {
+                right: 1rem;
+                width: 40px;
+                height: 40px;
+                font-size: 1.1rem;
+            }
+
+            .login-container {
+                padding: 1rem;
+                margin-top: 4rem;
+            }
+
+            .logo {
+                font-size: 2rem;
+            }
+
+            .subtitle {
+                font-size: 1rem;
+            }
+
+            .cards-container {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .login-card {
+                padding: 2rem 1.5rem;
+            }
+
+            .card-icon {
+                font-size: 2.5rem;
+            }
+
+            .card-title {
+                font-size: 1.3rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .back-home {
+                left: 1rem;
+                padding: 0.5rem 1rem;
+                font-size: 0.75rem;
+            }
+
+            .login-container {
+                margin-top: 3rem;
+            }
+
+            .header {
+                margin-bottom: 2rem;
+            }
+
+            .login-card {
+                padding: 1.5rem 1rem;
+            }
+        }
+
+        /* Dark mode adjustments */
+        [data-theme="dark"] .back-home {
+            background: rgba(26, 26, 26, 0.9);
+            color: var(--text-light);
+        }
+
+        [data-theme="dark"] .back-home:hover {
+            background: var(--white);
+            color: var(--text-dark);
+        }
+
+        [data-theme="dark"] .login-card {
+            background: rgba(26, 26, 26, 0.9);
+            color: var(--text-dark);
+        }
+    </style>
+</head>
+<body>
+    <!-- Back to Home Button -->
+    <a href="index.html" class="back-home">← Back to Home</a>
+
+    <!-- Theme Toggle -->
+    <button class="theme-toggle" onclick="toggleTheme()" id="themeToggle">🌙</button>
+
+    <!-- Main Login Container -->
+    <div class="login-container">
+        <div class="header">
+            <h1 class="logo">Cohesia 🌸</h1>
+            <p class="subtitle">Choose your login type to access your workspace community</p>
+        </div>
+
+        <div class="cards-container">
+            <!-- HR Login Card -->
+            <a href="hr_login.html" class="login-card hr-card">
+                <span class="card-icon">👩‍💼</span>
+                <h2 class="card-title">Login as HR</h2>
+                <p class="card-description">
+                    Access administrative features, monitor conversations, 
+                    and manage the women's community in your organization.
+                </p>
+                <span class="card-button">HR Portal</span>
+            </a>
+
+            <!-- Employee Login Card -->
+            <a href="employee_login.html" class="login-card employee-card">
+                <span class="card-icon">👩‍💻</span>
+                <h2 class="card-title">Login as Employee</h2>
+                <p class="card-description">
+                    Connect with other women, share resources, chat, 
+                    and build meaningful workplace relationships.
+                </p>
+                <span class="card-button">Employee Portal</span>
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // Theme Toggle Function
+        function toggleTheme() {
+            const body = document.body;
+            const themeToggle = document.getElementById('themeToggle');
+            
+            if (body.getAttribute('data-theme') === 'dark') {
+                body.removeAttribute('data-theme');
+                themeToggle.textContent = '🌙';
+                localStorage.setItem('cohesia-theme', 'light');
+            } else {
+                body.setAttribute('data-theme', 'dark');
+                themeToggle.textContent = '☀️';
+                localStorage.setItem('cohesia-theme', 'dark');
+            }
+        }
+
+        // Initialize theme from localStorage or system preference
+        function initializeTheme() {
+            const savedTheme = localStorage.getItem('cohesia-theme');
+            const themeToggle = document.getElementById('themeToggle');
+            
+            if (savedTheme === 'dark' || 
+                (!savedTheme && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.body.setAttribute('data-theme', 'dark');
+                themeToggle.textContent = '☀️';
+            } else {
+                themeToggle.textContent = '🌙';
+            }
+        }
+
+        // Card hover sound effect (optional enhancement)
+        function addHoverEffects() {
+            const cards = document.querySelectorAll('.login-card');
+            
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-10px) scale(1.03)';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0) scale(1)';
+                });
+            });
+        }
+
+        // Initialize everything when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeTheme();
+            addHoverEffects();
+        });
+
+        // Add smooth page transition effect
+        window.addEventListener('beforeunload', function() {
+            document.body.style.opacity = '0';
+            document.body.style.transform = 'scale(0.95)';
+        });
+    </script>
+</body>
+</html>

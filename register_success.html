@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration Successful - Cohesia</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* CSS Variables for color theme matching */
+        :root {
+            --primary-pink: #f8bbd9;
+            --light-pink: #fdeef4;
+            --lavender: #e8d5ff;
+            --cream: #fff8e7;
+            --soft-purple: #d4a4eb;
+            --text-dark: #2d1b3d;
+            --text-light: #6b4c7a;
+            --white: #ffffff;
+            --shadow: rgba(212, 164, 235, 0.3);
+            --transition: all 0.3s ease;
+        }
+
+        [data-theme="dark"] {
+            --primary-pink: #8b5a7a;
+            --light-pink: #2a1e28;
+            --lavender: #3d2a4d;
+            --cream: #2d2520;
+            --soft-purple: #6b4a7a;
+            --text-dark: #e8d5ff;
+            --text-light: #c4a4d3;
+            --white: #1a1a1a;
+            --shadow: rgba(139, 90, 122, 0.4);
+        }
+
+        /* Base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            background: linear-gradient(135deg, var(--lavender), var(--light-pink));
+            transition: var(--transition);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        header {
+            padding: 20px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            z-index: 100;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            text-decoration: none;
+        }
+
+        .logo::after {
+            content: "🌸";
+            font-size: 1.5rem;
+        }
+
+        /* Theme toggle button */
+        .theme-toggle {
+            background: var(--primary-pink);
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: var(--text-dark);
+            transition: var(--transition);
+            box-shadow: 0 4px 15px var(--shadow);
+        }
+
+        .theme-toggle:hover {
+            background: var(--soft-purple);
+            transform: scale(1.05);
+        }
+
+        /* Main content */
+        main {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+
+        /* Success card */
+        .success-card {
+            background: var(--white);
+            padding: 60px 50px;
+            border-radius: 25px;
+            box-shadow: 0 15px 35px var(--shadow);
+            width: 100%;
+            max-width: 600px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            transition: var(--transition);
+            border: 1px solid rgba(212, 164, 235, 0.2);
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        .success-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 50px var(--shadow);
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Success icon */
+        .success-icon {
+            font-size: 5rem;
+            margin-bottom: 20px;
+            animation: bounceIn 0.8s ease-out;
+        }
+
+        @keyframes bounceIn {
+            0% {
+                transform: scale(0);
+            }
+            50% {
+                transform: scale(1.2);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        /* Headings */
+        .success-title {
+            color: var(--text-dark);
+            font-size: 2.2rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .success-message {
+            color: var(--text-light);
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+            line-height: 1.8;
+        }
+
+        /* Company name highlight */
+        .company-name {
+            color: var(--soft-purple);
+            font-weight: 600;
+            font-size: 1.3rem;
+            display: block;
+            margin: 20px 0;
+            padding: 15px;
+            background: var(--light-pink);
+            border-radius: 12px;
+            border: 2px dashed var(--primary-pink);
+        }
+
+        /* Button */
+        .proceed-btn {
+            display: inline-block;
+            padding: 18px 45px;
+            background: linear-gradient(135deg, var(--primary-pink), var(--soft-purple));
+            color: var(--text-dark);
+            text-decoration: none;
+            border-radius: 15px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: var(--transition);
+            box-shadow: 0 4px 15px var(--shadow);
+            margin-top: 20px;
+        }
+
+        .proceed-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px var(--shadow);
+            background: linear-gradient(135deg, var(--soft-purple), var(--primary-pink));
+        }
+
+        /* Info box */
+        .info-box {
+            margin-top: 30px;
+            padding: 20px;
+            background: var(--lavender);
+            border-radius: 12px;
+            border-left: 4px solid var(--soft-purple);
+        }
+
+        .info-box p {
+            color: var(--text-dark);
+            font-size: 0.95rem;
+            margin: 0;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .success-card {
+                padding: 40px 30px;
+            }
+
+            .success-title {
+                font-size: 1.8rem;
+            }
+
+            .success-message {
+                font-size: 1rem;
+            }
+
+            .company-name {
+                font-size: 1.1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .success-card {
+                padding: 30px 20px;
+            }
+
+            .success-icon {
+                font-size: 4rem;
+            }
+
+            .success-title {
+                font-size: 1.5rem;
+            }
+
+            .proceed-btn {
+                padding: 15px 35px;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body data-theme="light">
+    <!-- Header -->
+    <header>
+        <a href="index.html" class="logo">Cohesia</a>
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+            🌙
+        </button>
+    </header>
+
+    <!-- Main content -->
+    <main>
+        <div class="success-card">
+            <div class="success-icon">🎉</div>
+            
+            <h1 class="success-title">Congratulations!</h1>
+            
+            <p class="success-message">
+                Your company has been registered successfully.
+            </p>
+
+            <div class="company-name" id="companyName">
+                <!-- Company name will be inserted here -->
+            </div>
+
+            <p class="success-message">
+                Your employees can now log in and start using Cohesia's women's safety network.
+            </p>
+
+            <a href="login.html" class="proceed-btn">
+                Proceed to Login
+            </a>
+
+            <div class="info-box">
+                <p>
+                    <strong>Next Steps:</strong> Share the login credentials with your employees. 
+                    They can access their dashboard and connect with the safety network immediately.
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Theme toggle functionality
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
+        
+        // Check for saved theme preference
+        const savedTheme = localStorage.getItem('cohesia-theme') || 'light';
+        body.setAttribute('data-theme', savedTheme);
+        themeToggle.textContent = savedTheme === 'light' ? '🌙' : '☀️';
+        
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = body.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            body.setAttribute('data-theme', newTheme);
+            themeToggle.textContent = newTheme === 'light' ? '🌙' : '☀️';
+            localStorage.setItem('cohesia-theme', newTheme);
+        });
+
+        // Get company name from URL query parameter
+        function getCompanyName() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const companyName = urlParams.get('company');
+            const companyNameElement = document.getElementById('companyName');
+            
+            if (companyName) {
+                companyNameElement.textContent = companyName;
+            } else {
+                companyNameElement.textContent = 'Your Organization';
+            }
+        }
+
+        // Initialize on page load
+        getCompanyName();
+
+        // Add confetti effect on load (optional enhancement)
+        window.addEventListener('load', () => {
+            // Page is loaded and animated
+            console.log('Registration successful for:', document.getElementById('companyName').textContent);
+        });
+    </script>
+</body>
+</html>

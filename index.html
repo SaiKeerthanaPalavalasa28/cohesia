@@ -1,0 +1,785 @@
+S<!DOCTYPE html>.
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cohesia - For Women, By A Woman</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-pink: #f8bbd9;
+            --light-pink: #fdeef4;
+            --lavender: #e8d5ff;
+            --cream: #fff8e7;
+            --soft-purple: #d4a4eb;
+            --text-dark: #2d1b3d;
+            --text-light: #6b4c7a;
+            --white: #ffffff;
+            --shadow: rgba(212, 164, 235, 0.3);        }
+
+        [data-theme="dark"] {
+            --primary-pink: #8b5a7a;
+            --light-pink: #2a1e28;
+            --lavender: #3d2a4d;
+            --cream: #2d2520;
+            --soft-purple: #6b4a7a;
+            --text-dark: #e8d5ff;
+            --text-light: #c4a4d3;
+            --white: #1a1a1a;
+            --shadow: rgba(139, 90, 122, 0.4);
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            background: var(--white);
+            transition: all 0.3s ease;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+            scroll-snap-type: y mandatory;
+        }
+
+        /* Mouse Ripple Effect */
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, var(--primary-pink) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0.7;
+            animation: ripple-animation 0.8s ease-out;
+            transform: translate(-50%, -50%);
+        }
+
+        @keyframes ripple-animation {
+            0% {
+                transform: translate(-50%, -50%) scale(0);
+                opacity: 0.7;
+            }
+            50% {
+                opacity: 0.4;
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(6);
+                opacity: 0;
+            }
+        }
+
+        /* Navigation */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            z-index: 1000;
+            transition: all 0.3s ease;
+            border-bottom: 1px solid var(--light-pink);
+        }
+
+        [data-theme="dark"] .navbar {
+            background: rgba(26, 26, 26, 0.95);
+            border-bottom: 1px solid var(--lavender);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--text-dark);
+            text-decoration: none;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-link {
+            color: var(--text-light);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            cursor: pointer;
+        }
+
+        .nav-link:hover {
+            color: var(--soft-purple);
+        }
+
+        .theme-toggle {
+            background: var(--primary-pink);
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.1);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            background: linear-gradient(135deg, var(--light-pink) 0%, var(--lavender) 50%, var(--cream) 100%);
+            padding: 2rem;
+            scroll-snap-align: start;
+            position: relative;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 8vw, 4.5rem);
+            font-weight: bold;
+            margin-bottom: 1.5rem;
+            color: var(--text-dark);
+            letter-spacing: -2px;
+        }
+
+        .hero-subtitle {
+            font-size: clamp(1rem, 3vw, 1.3rem);
+            color: var(--text-light);
+            margin-bottom: 2.5rem;
+            font-style: italic;
+            line-height: 1.8;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(45deg, var(--primary-pink), var(--soft-purple));
+            color: white;
+            padding: 1rem 2.5rem;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px var(--shadow);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px var(--shadow);
+        }
+
+        /* Section Styles */
+        .section {
+            min-height: 100vh;
+            padding: 5rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            scroll-snap-align: start;
+            position: relative;
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .section.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .section.slide-in {
+            animation: slideInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes slideInUp {
+            0% {
+                opacity: 0;
+                transform: translateY(100px) scale(0.95);
+            }
+            50% {
+                opacity: 0.7;
+                transform: translateY(-10px) scale(1.02);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .section h2 {
+            font-size: clamp(2rem, 5vw, 3rem);
+            text-align: center;
+            margin-bottom: 3rem;
+            color: var(--text-dark);
+        }
+
+        .about {
+            background: var(--white);
+            text-align: center;
+        }
+
+        .about p {
+            font-size: 1.2rem;
+            color: var(--text-light);
+            max-width: 800px;
+            margin: 0 auto 2rem;
+            line-height: 1.8;
+        }
+
+        /* How It Works */
+        .how-it-works {
+            background: linear-gradient(180deg, var(--white) 0%, var(--light-pink) 50%, var(--lavender) 100%);
+        }
+
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .step-card {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 2rem;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(248, 187, 217, 0.3);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .step-card:hover {
+            transform: translateY(-15px) scale(1.02);
+            box-shadow: 0 15px 40px rgba(248, 187, 217, 0.5);
+        }
+
+        .step-number {
+            display: inline-block;
+            width: 60px;
+            height: 60px;
+            background: var(--primary-pink);
+            color: white;
+            border-radius: 50%;
+            line-height: 60px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .step-card h3 {
+            color: var(--text-dark);
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        .step-card p {
+            color: var(--text-light);
+            line-height: 1.6;
+        }
+
+        /* Testimonials */
+        .testimonials {
+            background: linear-gradient(180deg, var(--lavender) 0%, var(--soft-purple) 100%);
+        }
+
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .testimonial-card {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(212, 164, 235, 0.3);
+            position: relative;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.4s ease;
+        }
+
+        .testimonial-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(212, 164, 235, 0.4);
+        }
+
+        .testimonial-card::before {
+            content: '"';
+            font-size: 4rem;
+            color: var(--primary-pink);
+            position: absolute;
+            top: -10px;
+            left: 20px;
+            font-family: serif;
+        }
+
+        .testimonial-text {
+            color: var(--text-light);
+            font-style: italic;
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+            line-height: 1.7;
+        }
+
+        .testimonial-author {
+            color: var(--text-dark);
+            font-weight: bold;
+        }
+
+        /* Join Now CTA */
+        .join-cta {
+            background: linear-gradient(135deg, var(--soft-purple) 0%, var(--primary-pink) 50%, var(--lavender) 100%);
+            color: white;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .join-cta::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 50%);
+            animation: floating 6s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        .join-cta::after {
+            content: '';
+            position: absolute;
+            bottom: -100px;
+            right: -100px;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: pulse 4s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        @keyframes floating {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.3; }
+            50% { transform: scale(1.2); opacity: 0.1; }
+        }
+
+        .join-cta h2 {
+            color: white;
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            margin-bottom: 2rem;
+            position: relative;
+            z-index: 2;
+            text-shadow: 0 2px 20px rgba(0,0,0,0.3);
+            font-weight: 300;
+            letter-spacing: -1px;
+        }
+
+        .join-cta .cta-button {
+            background: rgba(255, 255, 255, 0.95);
+            color: var(--soft-purple);
+            font-size: 1.3rem;
+            padding: 1.2rem 3rem;
+            position: relative;
+            z-index: 2;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .join-cta .cta-button:hover {
+            background: white;
+            transform: translateY(-8px) scale(1.05);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+            border-color: rgba(255, 255, 255, 0.6);
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--text-dark);
+            color: var(--light-pink);
+            padding: 3rem 2rem 2rem;
+            text-align: center;
+            scroll-snap-align: end;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .social-links {
+            margin-bottom: 2rem;
+        }
+
+        .social-links a {
+            color: var(--primary-pink);
+            font-size: 1.5rem;
+            margin: 0 1rem;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .social-links a:hover {
+            color: var(--lavender);
+        }
+
+        .footer p {
+            margin-bottom: 1rem;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 1rem;
+            }
+
+            .nav-menu {
+                gap: 1rem;
+            }
+
+            .nav-link {
+                font-size: 0.9rem;
+            }
+
+            .hero {
+                padding: 1rem;
+                min-height: 90vh;
+            }
+
+            .section {
+                padding: 3rem 1rem;
+            }
+
+            .steps-grid,
+            .testimonials-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .step-card,
+            .testimonial-card {
+                padding: 1.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .logo {
+                font-size: 1.5rem;
+            }
+
+            .nav-menu {
+                gap: 0.5rem;
+            }
+
+            .theme-toggle {
+                width: 35px;
+                height: 35px;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="#" class="logo">Cohesia 🌸</a>
+            <ul class="nav-menu">
+                <li><a href="#" class="nav-link" onclick="scrollToTop()">Home</a></li>
+                <li><a href="#about" class="nav-link" onclick="scrollToSection('about')">About</a></li>
+                <li><a href="login.html" class="nav-link">Login</a></li>
+                <li><a href="register.html" class="nav-link">Register</a></li>
+            </ul>
+            <button class="theme-toggle" onclick="toggleTheme()" id="themeToggle">🌙</button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>FOR WOMEN, BY A WOMAN.</h1>
+            <p class="hero-subtitle">
+                Where sisterhood blooms in the workplace,<br>
+                where voices unite and dreams take flight,<br>
+                where every woman finds her tribe.
+            </p>
+            <a href="register.html" class="cta-button">Join Now</a>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="section about fade-in" id="about">
+        <h2>About Cohesia</h2>
+        <p>
+            Cohesia is more than just a platform—it's a movement. We connect women within organizations, 
+            creating a safe space where professional relationships flourish and personal bonds strengthen.
+        </p>
+        <p>
+            Through our WhatsApp-like chat system, women can share lift requests, exchange school recommendations, 
+            promote their small businesses, and support each other's journeys. Every conversation is thoughtfully 
+            moderated by HR to ensure a safe, respectful environment where authentic connections thrive.
+        </p>
+        <p>
+            Because when women lift each other up, we all rise together.
+        </p>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="section how-it-works fade-in">
+        <h2>How It Works</h2>
+        <div class="steps-grid">
+            <div class="step-card">
+                <div class="step-number">1</div>
+                <h3>Sign Up</h3>
+                <p>Create your profile and join your organization's women's community. It's quick, easy, and free.</p>
+            </div>
+            <div class="step-card">
+                <div class="step-number">2</div>
+                <h3>Connect</h3>
+                <p>Discover and connect with other women in your organization. Build meaningful professional relationships.</p>
+            </div>
+            <div class="step-card">
+                <div class="step-number">3</div>
+                <h3>Chat & Support</h3>
+                <p>Share resources, ask questions, promote your side business, or simply connect with like-minded women.</p>
+            </div>
+            <div class="step-card">
+                <div class="step-number">4</div>
+                <h3>Safe Environment</h3>
+                <p>Enjoy peace of mind knowing that all interactions are monitored by HR to maintain a respectful space.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="section testimonials fade-in">
+        <h2>What Women Are Saying</h2>
+        <div class="testimonials-grid">
+            <div class="testimonial-card">
+                <p class="testimonial-text">
+                    Cohesia helped me find my carpooling buddy and a mentor in the same week! 
+                    The community here is incredibly supportive and genuine.
+                </p>
+                <p class="testimonial-author">— Sarah Chen, Marketing Manager</p>
+            </div>
+            <div class="testimonial-card">
+                <p class="testimonial-text">
+                    I was able to promote my handmade jewelry business and got my first three customers 
+                    through Cohesia. The women here truly support each other's dreams.
+                </p>
+                <p class="testimonial-author">— Priya Sharma, Software Engineer</p>
+            </div>
+            <div class="testimonial-card">
+                <p class="testimonial-text">
+                    Finding childcare recommendations has never been easier. The moms here share 
+                    the best resources and have become my real-life support system.
+                </p>
+                <p class="testimonial-author">— Jessica Williams, Operations Director</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Join Now CTA Section -->
+    <section class="section join-cta fade-in">
+        <h2>Ready to Join the Sisterhood?</h2>
+        <p style="font-size: 1.2rem; margin-bottom: 2.5rem; opacity: 0.9; max-width: 600px; margin-left: auto; margin-right: auto; position: relative; z-index: 2;">
+            Your journey towards meaningful workplace connections starts here. 
+            Join thousands of women who've found their professional tribe.
+        </p>
+        <a href="register.html" class="cta-button">Join Now</a>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="social-links">
+                <a href="#">📘</a>
+                <a href="#">📷</a>
+                <a href="#">🐦</a>
+                <a href="#">💼</a>
+            </div>
+            <p>Contact us: hello@cohesia.com</p>
+            <p>&copy; 2025 Cohesia. Made with 💜 for women everywhere.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Theme Toggle
+        function toggleTheme() {
+            const body = document.body;
+            const themeToggle = document.getElementById('themeToggle');
+            
+            if (body.getAttribute('data-theme') === 'dark') {
+                body.removeAttribute('data-theme');
+                themeToggle.textContent = '🌙';
+            } else {
+                body.setAttribute('data-theme', 'dark');
+                themeToggle.textContent = '☀️';
+            }
+        }
+
+        // Smooth Scroll Functions
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+
+        function scrollToSection(sectionId) {
+            const element = document.getElementById(sectionId);
+            const navHeight = document.querySelector('.navbar').offsetHeight;
+            const elementPosition = element.offsetTop - navHeight;
+            
+            window.scrollTo({
+                top: elementPosition,
+                behavior: 'smooth'
+            });
+        }
+
+        // Mouse Ripple Effect
+        document.addEventListener('click', function(e) {
+            const ripple = document.createElement('div');
+            ripple.className = 'ripple';
+            
+            const size = Math.random() * 40 + 40; // Random size between 40-80px
+            ripple.style.width = size + 'px';
+            ripple.style.height = size + 'px';
+            ripple.style.left = e.pageX + 'px';
+            ripple.style.top = e.pageY + 'px';
+            
+            document.body.appendChild(ripple);
+            
+            setTimeout(() => {
+                ripple.remove();
+            }, 800);
+        });
+
+        // Smooth Section Transitions
+        function handleSectionTransitions() {
+            const sections = document.querySelectorAll('.section');
+            const triggerBottom = window.innerHeight * 0.8;
+
+            sections.forEach(section => {
+                const sectionTop = section.getBoundingClientRect().top;
+
+                if (sectionTop < triggerBottom && sectionTop > -section.offsetHeight * 0.5) {
+                    if (!section.classList.contains('active')) {
+                        section.classList.add('active', 'slide-in');
+                    }
+                } else {
+                    section.classList.remove('active', 'slide-in');
+                }
+            });
+        }
+
+        // Fade In Animation on Scroll
+        function isElementInViewport(el) {
+            const rect = el.getBoundingClientRect();
+            return (
+                rect.top >= 0 &&
+                rect.left >= 0 &&
+                rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+                rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+            );
+        }
+
+        function handleScrollAnimations() {
+            const elements = document.querySelectorAll('.fade-in');
+            elements.forEach(el => {
+                if (isElementInViewport(el)) {
+                    el.classList.add('visible');
+                }
+            });
+            
+            // Handle section transitions
+            handleSectionTransitions();
+        }
+
+        // Optimized scroll listener
+        let ticking = false;
+        function onScroll() {
+            if (!ticking) {
+                requestAnimationFrame(() => {
+                    handleScrollAnimations();
+                    ticking = false;
+                });
+                ticking = true;
+            }
+        }
+
+        // Event Listeners
+        window.addEventListener('scroll', onScroll);
+        window.addEventListener('load', () => {
+            handleScrollAnimations();
+            // Initialize first section as active
+            const firstSection = document.querySelector('.section');
+            if (firstSection) {
+                firstSection.classList.add('active');
+            }
+        });
+
+        // Initialize theme based on user preference
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.body.setAttribute('data-theme', 'dark');
+            document.getElementById('themeToggle').textContent = '☀️';
+        }
+    </script>
+</body>
+</html>

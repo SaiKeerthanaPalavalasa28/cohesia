@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HR Access Portal - Cohesia</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* CSS Variables for exact color theme matching */
+        :root {
+            --primary-pink: #f8bbd9;
+            --light-pink: #fdeef4;
+            --lavender: #e8d5ff;
+            --cream: #fff8e7;
+            --soft-purple: #d4a4eb;
+            --text-dark: #2d1b3d;
+            --text-light: #6b4c7a;
+            --white: #ffffff;
+            --shadow: rgba(212, 164, 235, 0.3);
+            --transition: all 0.3s ease;
+        }
+
+        [data-theme="dark"] {
+            --primary-pink: #8b5a7a;
+            --light-pink: #2a1e28;
+            --lavender: #3d2a4d;
+            --cream: #2d2520;
+            --soft-purple: #6b4a7a;
+            --text-dark: #e8d5ff;
+            --text-light: #c4a4d3;
+            --white: #1a1a1a;
+            --shadow: rgba(139, 90, 122, 0.4);
+        }
+
+        /* Base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            background: linear-gradient(135deg, var(--lavender), var(--light-pink));
+            transition: all 0.3s ease;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+            scroll-snap-type: y mandatory;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header styles matching homepage */
+        header {
+            padding: 20px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            z-index: 100;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            text-decoration: none;
+        }
+
+        .logo::after {
+            content: "🌸";
+            font-size: 1.5rem;
+        }
+
+        .nav-container {
+            display: flex;
+            align-items: center;
+            gap: 40px;
+        }
+
+        nav {
+            display: flex;
+            gap: 35px;
+        }
+
+        nav a {
+            color: var(--text-light);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        nav a:hover {
+            color: var(--text-dark);
+            transform: translateY(-2px);
+        }
+
+        /* Theme toggle button */
+        .theme-toggle {
+            background: var(--primary-pink);
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: var(--text-dark);
+            transition: var(--transition);
+            box-shadow: 0 4px 15px var(--shadow);
+        }
+
+        .theme-toggle:hover {
+            background: var(--soft-purple);
+            transform: scale(1.05);
+        }
+
+        /* Main content */
+        main {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            max-width: 500px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        /* Login card */
+        .login-card {
+            background: var(--white);
+            padding: 50px 40px;
+            border-radius: 25px;
+            box-shadow: 0 15px 35px var(--shadow);
+            width: 100%;
+            max-width: 450px;
+            backdrop-filter: blur(10px);
+            transition: var(--transition);
+            border: 1px solid rgba(212, 164, 235, 0.2);
+        }
+
+        .login-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 50px var(--shadow);
+        }
+
+        .card-title {
+            text-align: center;
+            color: var(--text-dark);
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 40px;
+        }
+
+        /* Form styles */
+        .form-group {
+            margin-bottom: 30px;
+        }
+
+        .form-group label {
+            display: block;
+            color: var(--text-dark);
+            font-weight: 500;
+            margin-bottom: 10px;
+            font-size: 1rem;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 18px 20px;
+            border: 2px solid var(--primary-pink);
+            border-radius: 15px;
+            font-size: 1rem;
+            font-family: 'Poppins', sans-serif;
+            transition: var(--transition);
+            background: var(--light-pink);
+            color: var(--text-dark);
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--soft-purple);
+            box-shadow: 0 0 0 4px rgba(212, 164, 235, 0.2);
+            transform: translateY(-3px);
+            background: var(--white);
+        }
+
+        .form-group input:hover {
+            border-color: var(--soft-purple);
+            background: var(--white);
+        }
+
+        /* Button styles */
+        .btn {
+            width: 100%;
+            padding: 18px;
+            border: none;
+            border-radius: 15px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-top: 10px;
+        }
+
+        .generate-otp-btn {
+            background: var(--primary-pink);
+            color: var(--text-dark);
+        }
+
+        .generate-otp-btn:hover {
+            background: var(--soft-purple);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px var(--shadow);
+        }
+
+        .generate-otp-btn:disabled {
+            background: var(--text-light);
+            color: var(--white);
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .verify-btn {
+            background: var(--soft-purple);
+            color: var(--text-dark);
+            display: none;
+        }
+
+        .verify-btn:hover {
+            background: var(--primary-pink);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px var(--shadow);
+        }
+
+        .verify-btn.show {
+            display: block;
+        }
+
+        /* OTP input container */
+        .otp-container {
+            display: none;
+            margin-top: 25px;
+        }
+
+        .otp-container.show {
+            display: block;
+        }
+
+        .otp-inputs {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .otp-input {
+            width: 50px !important;
+            height: 60px;
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: 600;
+            border-radius: 12px !important;
+            padding: 0 !important;
+        }
+
+        .otp-input:focus {
+            transform: scale(1.05);
+        }
+
+        /* Success/Error messages */
+        .message {
+            text-align: center;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            font-weight: 500;
+            display: none;
+        }
+
+        .message.success {
+            background: var(--lavender);
+            color: var(--text-dark);
+            border: 2px solid var(--soft-purple);
+        }
+
+        .message.error {
+            background: #ffe6e6;
+            color: #d63384;
+            border: 2px solid #f8bbd9;
+        }
+
+        .message.show {
+            display: block;
+        }
+
+        /* Timer display */
+        .timer {
+            text-align: center;
+            color: var(--text-light);
+            font-size: 0.9rem;
+            margin-top: 10px;
+            display: none;
+        }
+
+        .timer.show {
+            display: block;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            header {
+                padding: 15px 4%;
+            }
+
+            .logo {
+                font-size: 1.6rem;
+            }
+
+            .nav-container {
+                gap: 20px;
+            }
+
+            nav a {
+                font-size: 0.9rem;
+            }
+
+            main {
+                padding: 20px;
+            }
+
+            .login-card {
+                padding: 35px 25px;
+            }
+
+            .card-title {
+                font-size: 1.7rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .login-card {
+                padding: 30px 20px;
+            }
+
+            .otp-inputs {
+                gap: 8px;
+            }
+
+            .otp-input {
+                width: 45px !important;
+                height: 55px;
+                font-size: 1.3rem;
+            }
+        }
+
+        /* Loading animation for buttons */
+        .btn.loading {
+            position: relative;
+            color: transparent;
+        }
+
+        .btn.loading::after {
+            content: "";
+            position: absolute;
+            width: 22px;
+            height: 22px;
+            top: 50%;
+            left: 50%;
+            margin-left: -11px;
+            margin-top: -11px;
+            border: 2px solid transparent;
+            border-top-color: var(--text-dark);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Mouse Ripple Effect */
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, var(--primary-pink) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0.7;
+            animation: ripple-animation 0.8s ease-out;
+            transform: translate(-50%, -50%);
+        }
+
+        @keyframes ripple-animation {
+            0% {
+                transform: translate(-50%, -50%) scale(0);
+                opacity: 0.7;
+            }
+            50% {
+                opacity: 0.4;
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(6);
+                opacity: 0;
+            }
+        }
+
+        /* Fade in animation */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .login-card {
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        /* Shake animation for errors */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        .shake {
+            animation: shake 0.5s ease-in-out;
+        }
+    </style>
+</head>
+<body data-theme="light">
+    <!-- Header matching homepage design -->
+    <header>
+        <a href="#" class="logo">Cohesia</a>
+        <div class="nav-container">
+            <nav>
+                <a href="index.html">Home</a>
+                <a href="index.html">About</a>
+                <a href="login.html">Login</a>
+                <a href="register.html">Register</a>
+            </nav>
+            <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                🌙
+            </button>
+        </div>
+    </header>
+
+    <!-- Main content -->
+    <main>
+        <!-- Login card -->
+        <div class="login-card">
+            <h2 class="card-title">HR Access Portal</h2>
+            
+            <form id="loginForm">
+                <!-- Phone/Employee ID input -->
+                <div class="form-group">
+                    <label for="phoneOrId">Phone No / Employee ID</label>
+                    <input 
+                        type="text" 
+                        id="phoneOrId" 
+                        name="phoneOrId" 
+                        required
+                        autocomplete="username"
+                        placeholder="Enter your phone number or employee ID"
+                    >
+                </div>
+
+                <!-- Generate OTP button -->
+                <button type="button" class="btn generate-otp-btn" id="generateOtpBtn">
+                    Generate OTP
+                </button>
+
+                <!-- Timer display -->
+                <div class="timer" id="timer"></div>
+
+                <!-- OTP input container -->
+                <div class="otp-container" id="otpContainer">
+                    <div class="form-group">
+                        <label>Enter 6-digit OTP</label>
+                        <div class="otp-inputs">
+                            <input type="text" class="otp-input" maxlength="1" data-index="0">
+                            <input type="text" class="otp-input" maxlength="1" data-index="1">
+                            <input type="text" class="otp-input" maxlength="1" data-index="2">
+                            <input type="text" class="otp-input" maxlength="1" data-index="3">
+                            <input type="text" class="otp-input" maxlength="1" data-index="4">
+                            <input type="text" class="otp-input" maxlength="1" data-index="5">
+                        </div>
+                    </div>
+
+                    <!-- Verify OTP button -->
+                    <button type="submit" class="btn verify-btn" id="verifyBtn">
+                        Verify & Login
+                        
+                    </button>
+                </div>
+
+                <!-- Message display -->
+                <div class="message" id="message"></div>
+            </form>
+        </div>
+    </main>
+
+    <script>
+        // HR Login Integration Script - FIXED VERSION
+// Replace the entire <script> section in your hr_login.html with this
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Get form elements
+    const phoneOrIdInput = document.getElementById('phoneOrId');
+    const generateOtpBtn = document.getElementById('generateOtpBtn');
+    const otpContainer = document.getElementById('otpContainer');
+    const verifyBtn = document.getElementById('verifyBtn');
+    const otpInputs = document.querySelectorAll('.otp-input');
+    const messageDiv = document.getElementById('message');
+    const timerDiv = document.getElementById('timer');
+    const loginForm = document.getElementById('loginForm');
+
+    let otpTimer = null;
+    let timeLeft = 0;
+    let generatedOtp = null;
+    let userCredentials = null;
+
+    // API Base URL
+    const API_URL = 'http://localhost:3000';
+
+    // Generate OTP Button Click
+    generateOtpBtn.addEventListener('click', async () => {
+        const employeeId = phoneOrIdInput.value.trim();
+        
+        if (!employeeId) {
+            showMessage('Please enter your Employee ID', 'error');
+            phoneOrIdInput.focus();
+            return;
+        }
+
+        // Show loading state
+        generateOtpBtn.classList.add('loading');
+        generateOtpBtn.disabled = true;
+
+        try {
+            // Verify if user exists and get their role
+            const response = await fetch(`${API_URL}/verify-user`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ employeeId })
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message || 'Failed to verify user');
+            }
+
+            const data = await response.json();
+            
+            // Check if user is HR
+            if (data.user.role !== 'HR') {
+                throw new Error('Access denied. HR credentials required.');
+            }
+
+            // Store user for later verification
+            userCredentials = data.user;
+            
+            // Generate a random 6-digit OTP (in real app, this would be sent via SMS/Email)
+            generatedOtp = Math.floor(100000 + Math.random() * 900000).toString();
+            
+            console.log('Generated OTP (for testing):', generatedOtp);
+            
+            // Reset button state
+            generateOtpBtn.classList.remove('loading');
+            generateOtpBtn.textContent = 'Regenerate OTP';
+            
+            // Show OTP input section
+            otpContainer.classList.add('show');
+            verifyBtn.classList.add('show');
+            
+            // Clear any previous OTP
+            otpInputs.forEach(input => input.value = '');
+            otpInputs[0].focus();
+            
+            // Start timer (60 seconds)
+            startOtpTimer(60);
+            
+            // Show success message with OTP (remove in production!)
+            showMessage(`OTP: ${generatedOtp} (Testing mode - Any 6 digits work)`, 'success');
+            
+        } catch (error) {
+            console.error('Generate OTP error:', error);
+            generateOtpBtn.classList.remove('loading');
+            generateOtpBtn.disabled = false;
+            showMessage(error.message || 'Failed to generate OTP. Make sure server is running.', 'error');
+        }
+    });
+
+    // Form submission - Verify OTP and Login
+    loginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const otp = Array.from(otpInputs).map(input => input.value).join('');
+        
+        if (otp.length !== 6) {
+            showMessage('Please enter complete 6-digit OTP', 'error');
+            return;
+        }
+
+        // TESTING MODE: Accept any 6-digit OTP
+        if (!/^\d{6}$/.test(otp)) {
+            showMessage('Please enter a valid 6-digit OTP', 'error');
+            otpContainer.classList.add('shake');
+            setTimeout(() => otpContainer.classList.remove('shake'), 500);
+            otpInputs.forEach(input => input.value = '');
+            otpInputs[0].focus();
+            return;
+        }
+
+        console.log('OTP Verified (Testing mode - any 6 digits accepted)');
+
+        // Show loading state
+        verifyBtn.classList.add('loading');
+        verifyBtn.disabled = true;
+
+        try {
+            // Make OTP login API call (no password needed!)
+            const loginResponse = await fetch(`${API_URL}/otp-login`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'include', // Important for sessions!
+                body: JSON.stringify({
+                    employeeId: userCredentials.employeeId
+                })
+            });
+
+            const loginData = await loginResponse.json();
+
+            if (loginResponse.ok && loginData.success) {
+                // Store user data in sessionStorage
+                sessionStorage.setItem('currentUser', JSON.stringify({
+                    name: loginData.name,
+                    employeeId: loginData.employeeId,
+                    role: loginData.role
+                }));
+                sessionStorage.setItem('isAuthenticated', 'true');
+                sessionStorage.setItem('userRole', loginData.role);
+                
+                showMessage('Login successful! Redirecting to HR Dashboard...', 'success');
+                clearInterval(otpTimer);
+                
+                // Redirect after 1.5 seconds
+                setTimeout(() => {
+                    window.location.href = '/hr_dashboard.html';
+                }, 1500);
+            } else {
+                throw new Error(loginData.message || 'Login failed');
+            }
+
+        } catch (error) {
+            console.error('Login error:', error);
+            verifyBtn.classList.remove('loading');
+            verifyBtn.disabled = false;
+            showMessage(error.message || 'Login failed. Please try again.', 'error');
+        }
+    });
+
+    // OTP Input handling - Auto-focus next input
+    otpInputs.forEach((input, index) => {
+        input.addEventListener('input', (e) => {
+            const value = e.target.value;
+            
+            // Only allow numbers
+            if (!/^\d*$/.test(value)) {
+                e.target.value = '';
+                return;
+            }
+            
+            // Move to next input if value entered
+            if (value && index < otpInputs.length - 1) {
+                otpInputs[index + 1].focus();
+            }
+        });
+
+        input.addEventListener('keydown', (e) => {
+            // Move to previous input on backspace if current is empty
+            if (e.key === 'Backspace' && !input.value && index > 0) {
+                otpInputs[index - 1].focus();
+            }
+        });
+
+        // Handle paste event
+        input.addEventListener('paste', (e) => {
+            e.preventDefault();
+            const pastedData = e.clipboardData.getData('text').slice(0, 6);
+            
+            if (/^\d+$/.test(pastedData)) {
+                pastedData.split('').forEach((char, i) => {
+                    if (otpInputs[i]) {
+                        otpInputs[i].value = char;
+                    }
+                });
+                // Focus last filled input or verify button
+                const lastIndex = Math.min(pastedData.length - 1, 5);
+                otpInputs[lastIndex].focus();
+            }
+        });
+    });
+
+    // Utility Functions
+    function startOtpTimer(seconds) {
+        timeLeft = seconds;
+        generateOtpBtn.disabled = true;
+        generateOtpBtn.style.opacity = '0.6';
+        timerDiv.classList.add('show');
+        
+        otpTimer = setInterval(() => {
+            const minutes = Math.floor(timeLeft / 60);
+            const secs = timeLeft % 60;
+            timerDiv.textContent = `Resend OTP in ${minutes}:${secs.toString().padStart(2, '0')}`;
+            
+            if (timeLeft <= 0) {
+                clearInterval(otpTimer);
+                generateOtpBtn.disabled = false;
+                generateOtpBtn.style.opacity = '1';
+                timerDiv.classList.remove('show');
+                generatedOtp = null;
+            }
+            timeLeft--;
+        }, 1000);
+    }
+
+    function showMessage(text, type = 'success') {
+        messageDiv.textContent = text;
+        messageDiv.className = `message ${type} show`;
+        
+        if (type === 'error') {
+            messageDiv.parentElement.classList.add('shake');
+            setTimeout(() => messageDiv.parentElement.classList.remove('shake'), 500);
+        }
+        
+        setTimeout(() => {
+            messageDiv.classList.remove('show');
+        }, 5000);
+    }
+});
+
+// Authentication check function (add to dashboard pages)
+function checkAuthentication() {
+    const isAuthenticated = sessionStorage.getItem('isAuthenticated');
+    const userRole = sessionStorage.getItem('userRole');
+    
+    if (!isAuthenticated || userRole !== 'HR') {
+        window.location.href = '/hr_login.html';
+        return false;
+    }
+    return true;
+}
+
+// Add this to your hr_dashboard.html at the top of the script section:
+if (window.location.pathname.includes('hr_dashboard')) {
+    if (!checkAuthentication()) {
+        // Will redirect if not authenticated
+    }
+}
+    </script>
+</body>
+</html>
